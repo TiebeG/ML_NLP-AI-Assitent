@@ -1,7 +1,7 @@
-# ML_NLP_AI-Assistent
+# ML_NLP_AI-Assistant
 
 ## 🗂️ Project Structure
-📦 ML_NLP_AI-Assistent/
+📦 ML_NLP_AI-Assistant/
 ```
 │
 ├── app.py
