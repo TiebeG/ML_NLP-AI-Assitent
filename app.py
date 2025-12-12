@@ -1,8 +1,12 @@
 import os
 import sys
 import uuid
+import json
+import sqlite3
 import datetime
 import streamlit as st
+
+from langchain_core.messages import HumanMessage, AIMessage
 
 # ----------------------------------------------------
 # Ensure backend import works
@@ -12,14 +16,82 @@ if BACKEND_DIR not in sys.path:
     sys.path.insert(0, BACKEND_DIR)
 
 from backend.graph_ml_assistant import graph_app
-from langchain_core.messages import HumanMessage, AIMessage
 
 
 # ----------------------------------------------------
-# Session Init
+# DETECT ENVIRONMENT & SET DB PATH
+# ----------------------------------------------------
+if os.path.exists("/mount/data"):
+    # Streamlit Cloud
+    DATA_DIR = "/mount/data"
+else:
+    # Local development
+    DATA_DIR = os.path.join(os.getcwd(), "local_data")
+
+os.makedirs(DATA_DIR, exist_ok=True)
+
+DB_PATH = os.path.join(DATA_DIR, "chats.db")
+
+
+# ----------------------------------------------------
+# SQLITE SETUP
+# ----------------------------------------------------
+conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+cursor = conn.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS chats (
+    chat_id TEXT PRIMARY KEY,
+    name TEXT,
+    messages TEXT,
+    last_updated REAL
+)
+""")
+conn.commit()
+
+
+# ----------------------------------------------------
+# DB HELPERS
+# ----------------------------------------------------
+def load_chats():
+    cursor.execute("SELECT chat_id, name, messages, last_updated FROM chats")
+    rows = cursor.fetchall()
+    chats = {}
+    for chat_id, name, messages, last_updated in rows:
+        chats[chat_id] = {
+            "name": name,
+            "messages": json.loads(messages),
+            "last_updated": last_updated
+        }
+    return chats
+
+
+def save_chat(chat_id, chat):
+    cursor.execute(
+        """
+        INSERT OR REPLACE INTO chats (chat_id, name, messages, last_updated)
+        VALUES (?, ?, ?, ?)
+        """,
+        (
+            chat_id,
+            chat["name"],
+            json.dumps(chat["messages"]),
+            chat["last_updated"]
+        )
+    )
+    conn.commit()
+
+
+def delete_chat(chat_id):
+    cursor.execute("DELETE FROM chats WHERE chat_id = ?", (chat_id,))
+    conn.commit()
+
+
+# ----------------------------------------------------
+# SESSION INIT
 # ----------------------------------------------------
 if "chats" not in st.session_state:
-    st.session_state.chats = {}
+    st.session_state.chats = load_chats()
 
 if "current_chat" not in st.session_state:
     st.session_state.current_chat = None
@@ -29,96 +101,28 @@ if "rename_id" not in st.session_state:
 
 
 # ----------------------------------------------------
-# Helper: Auto title generation
+# HELPERS
 # ----------------------------------------------------
 def auto_title_from_text(text):
-    words = text.strip().split()
-    title = " ".join(words[:6]).title()
-    return title if title else "New Chat"
+    return " ".join(text.split()[:6]).title() or "New Chat"
 
 
-# ----------------------------------------------------
-# Create New Chat
-# ----------------------------------------------------
 def create_new_chat():
     chat_id = str(uuid.uuid4())
-    st.session_state.chats[chat_id] = {
+    chat = {
         "name": "New Chat",
         "messages": [],
-        "last_updated": datetime.datetime.now().timestamp(),
+        "last_updated": datetime.datetime.now().timestamp()
     }
+    st.session_state.chats[chat_id] = chat
     st.session_state.current_chat = chat_id
-
-
-# ----------------------------------------------------
-# ✨ GLOBAL CSS — Fix sidebar & layout cleanly
-# ----------------------------------------------------
-st.markdown("""
-<style>
-/* Wider sidebar */
-section[data-testid="stSidebar"] {
-    width: 320px !important;
-    background-color: #1f1f23 !important;
-    padding: 6px 12px;
-}
-
-/* Chat row */
-.chat-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 6px;
-}
-
-/* Chat button */
-.chat-name-btn button {
-    width: 100% !important;
-    height: 32px !important;     /* Smaller */
-    padding: 0 10px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    border-radius: 6px !important;
-    font-size: 0.85rem !important;
-}
-
-/* ICON BUTTONS — clean and aligned */
-.icon-btn button {
-    width: 30px !important;
-    height: 30px !important;
-    padding: 0 !important;
-    font-size: 16px !important;
-    border-radius: 6px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-/* Scroll container */
-.chat-list {
-    max-height: 65vh;
-    overflow-y: auto;
-    padding-right: 6px;
-}
-
-/* Hide scrollbar */
-.chat-list::-webkit-scrollbar {
-    width: 4px;
-}
-.chat-list::-webkit-scrollbar-thumb {
-    background: #444;
-    border-radius: 10px;
-}
-</style>
-""", unsafe_allow_html=True
-)
+    save_chat(chat_id, chat)
 
 
 # ----------------------------------------------------
 # SIDEBAR
 # ----------------------------------------------------
 with st.sidebar:
-
     st.markdown("## 💬 ML Assistant")
 
     if st.button("➕ New Chat", use_container_width=True):
@@ -126,131 +130,81 @@ with st.sidebar:
         st.rerun()
 
     st.markdown("---")
-    st.markdown("### Chats")
 
     sorted_chats = sorted(
         st.session_state.chats.items(),
-        key=lambda item: item[1]["last_updated"],
-        reverse=True,
+        key=lambda x: x[1]["last_updated"],
+        reverse=True
     )
 
-    # Scrollable container
-    st.markdown('<div class="chat-list">', unsafe_allow_html=True)
-
-    for chat_id, chat_data in sorted_chats:
-        st.markdown('<div class="chat-row">', unsafe_allow_html=True)
-
+    for chat_id, chat in sorted_chats:
         col1, col2, col3 = st.columns([8, 1, 1])
 
-        # Chat name button (ellipsis)
         with col1:
-            st.markdown('<div class="chat-name-btn">', unsafe_allow_html=True)
-            if st.button(chat_data["name"], key=f"select_{chat_id}", use_container_width=True):
+            if st.button(chat["name"], key=f"open_{chat_id}", use_container_width=True):
                 st.session_state.current_chat = chat_id
                 st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
 
-        # Rename
         with col2:
-            st.markdown('<div class="icon-btn">', unsafe_allow_html=True)
-            if st.button("✏️", key=f"rename_{chat_id}", help="Rename chat"):
+            if st.button("i", key=f"rename_{chat_id}"):
                 st.session_state.rename_id = chat_id
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
 
-        # Delete
         with col3:
-            st.markdown('<div class="icon-btn">', unsafe_allow_html=True)
-            if st.button("❌", key=f"delete_{chat_id}", help="Delete chat"):
+            if st.button("x", key=f"delete_{chat_id}"):
+                delete_chat(chat_id)
                 del st.session_state.chats[chat_id]
                 if st.session_state.current_chat == chat_id:
                     st.session_state.current_chat = None
-                st.session_state.rename_id = None
                 st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Rename modal
     if st.session_state.rename_id:
-        st.markdown("---")
-        edit_id = st.session_state.rename_id
-        current_name = st.session_state.chats[edit_id]["name"]
-
-        new_name = st.text_input("Rename Chat", value=current_name)
-        save, cancel = st.columns(2)
-
-        with save:
-            if st.button("Save"):
-                if new_name.strip():
-                    st.session_state.chats[edit_id]["name"] = new_name.strip()
-                st.session_state.rename_id = None
-                st.rerun()
-
-        with cancel:
-            if st.button("Cancel"):
-                st.session_state.rename_id = None
-                st.rerun()
+        cid = st.session_state.rename_id
+        new_name = st.text_input("Rename chat", st.session_state.chats[cid]["name"])
+        if st.button("Save"):
+            st.session_state.chats[cid]["name"] = new_name
+            save_chat(cid, st.session_state.chats[cid])
+            st.session_state.rename_id = None
+            st.rerun()
 
 
 # ----------------------------------------------------
-# MAIN CHAT WINDOW
+# MAIN
 # ----------------------------------------------------
 if st.session_state.current_chat is None:
-
-    st.markdown("### 👋 Welcome!")
-    st.markdown(
-        "Start by creating a new chat from the sidebar using **➕ New Chat**.\n\n"
-        "Your ML assistant is ready to help with course topics, quizzes, explanations, and more."
-    )
+    st.markdown("## 👋 Welcome")
+    st.markdown("Create a new chat from the sidebar.")
     st.stop()
 
-
-# If a chat *is* selected:
 chat_id = st.session_state.current_chat
-chat_data = st.session_state.chats[chat_id]
-messages = chat_data["messages"]
+chat = st.session_state.chats[chat_id]
 
-# Chat title
-st.markdown(f"## {chat_data['name']}")
+st.markdown(f"## {chat['name']}")
 
-
-# Show previous messages
-for msg in messages:
+for msg in chat["messages"]:
     st.chat_message(msg["role"]).write(msg["content"])
 
 
-# ----------------------------------------------------
-# INPUT HANDLING
-# ----------------------------------------------------
 user_input = st.chat_input("Ask anything from the ML course...")
 
 if user_input:
+    if chat["name"] == "New Chat" and not chat["messages"]:
+        chat["name"] = auto_title_from_text(user_input)
 
-    # Auto rename chat on first message
-    if chat_data["name"] == "New Chat" and len(messages) == 0:
-        st.session_state.chats[chat_id]["name"] = auto_title_from_text(user_input)
+    chat["messages"].append({"role": "user", "content": user_input})
 
-    messages.append({"role": "user", "content": user_input})
-
-    graph_state = {
+    state = {
         "messages": [
             HumanMessage(content=m["content"]) if m["role"] == "user"
             else AIMessage(content=m["content"])
-            for m in messages
-        ],
-        "route": None,
-        "chapter": None
+            for m in chat["messages"]
+        ]
     }
 
-    result = graph_app.invoke(graph_state)
-    ai_response = result["messages"][-1].content
+    result = graph_app.invoke(state)
+    reply = result["messages"][-1].content
 
-    messages.append({"role": "assistant", "content": ai_response})
+    chat["messages"].append({"role": "assistant", "content": reply})
+    chat["last_updated"] = datetime.datetime.now().timestamp()
 
-    # Move chat to top
-    st.session_state.chats[chat_id]["last_updated"] = datetime.datetime.now().timestamp()
-
+    save_chat(chat_id, chat)
     st.rerun()
