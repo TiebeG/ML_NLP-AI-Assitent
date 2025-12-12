@@ -12,3 +12,188 @@
 2.4 We use the chaining rule to let the gradient of the loss function propagate backwards from the last layers to the first. In doing so, we encounter the problems of vanishing gradients and covariance shift. Briefly discuss these problems, and how we could fix these
 2.5 Deep Neural Networks are extremely flexible and can adapt to any kind of problem. So flexible, that we always run a major risk of overfitting. That’s why we use regularization techniques: we want to keep our extreme flexibility, but we want to keep overfitting in check. Discuss different regularization techniques.
 2.6 Explain how Convolutional Neural Networks (CNNs), Autoencoders (AE), Fully Connected Networks (FCNs), Recurrent Neural Networks (RNNs), Transformers, and Generative Adversarial Networks (GANs) differ in their design and intended use cases. How does the architecture of each network type influence the kind of data it handles best and the nature of its output? Provide examples of real-world applications for these architectures.
+3.1 Explain why a fully connected feed forward neural network is not very well suited to model a computer vision task. And how a convolutional neural network (cnn) solves these problems.
+3.2 Explain the concept of a convolutional operation using the terms ‘kernel’, ‘local receptive field’, ‘stride’, ‘padding’, ‘feature map’, and ‘2D convolution’. Can you think of any use cases of a 3D convolution?
+3.3 Explain a typical CNN architecture for image classification (convolution + relu layers, pooling layers, flatten or GAP layer, fully connected feed-forward layer, batch normalization layer, and a softmax layer to do cross-entropy loss calculations)
+3.4 Explain the concept of transfer learning to do computer vision modelling, and how we go about training such a network. Focus on the difference between feature extraction and fine tuning. Why was Imagenet such a big game-changer in this context?
+3.5 The Imagenet Large Scale Visual Recognition Challenge caused some real innovative shifts in the deep learning CNN community. Explain following innovative architectural enhancements: the ReLU’s and Dropout from Alexnet, the use of smaller and smaller kernels from VGG (why is this better?), and combining small and larger kernels with the identity convolution into a module, from Inception/GoogLeNet, and finally the use of skip connections from resnet and densenet architectures.
+3.6 Explain some advanced tweaking options from the fastai library, such as the learning rate finder, discriminative learning rates on top of the one cycle learning rate, and the use of fp16 mixed precision to optimize learning. And why is the ‘timm’ library such a useful addition to the standard fastai options?
+3.7 Explain how convolutional neural networks for vision might be applied in non-traditional domains, such as sound classification, fraud detection, and malware detection. Would you still advise to use a pretrained resnet (trained on imagenet data) to be used in this context?
+3.8 Adjusting the decision threshold in a binary classification model affects the confusion matrix. Discuss the trade-offs between precision and recall when changing the threshold. How does this impact the overall performance of the model?
+3.9 Discuss why the Precision-Recall (PR) curve is more informative than the ROC curve for evaluating models on unbalanced datasets. Define precision and recall, and explain how the PR curve helps in understanding the performance of a classifier in such scenarios. What does the area under the PR curve indicate?
+4.1 Discuss the evolution of object detection methods from naïve template matching to HOG features and SIFT. What were the main limitations of these methods, and how did each subsequent method attempt to address them?
+4.2 How do Convolutional Neural Networks (CNNs) improve feature extraction in object detection compared to earlier methods? Discuss the roles of regression and classification heads in these networks.
+4.3 What are the main challenges in object detection, such as scale, aspect ratio, and occlusion? How do techniques like Region of Interest (ROI) identification and non-maximum suppression help mitigate these challenges?
+4.4 Compare and contrast two-stage detectors (e.g., R-CNN family) and one-stage detectors (e.g., YOLO). What are the advantages and disadvantages of each approach?
+4.5 Discuss the importance of evaluation metrics in object detection. How do metrics like Intersection over Union (IoU) and mean Average Precision (mAP) help in assessing the performance of object detection models?
+4.6 How does the threshold for non-maximum suppression affect the performance of an object detector?
+4.7 Discuss the differences between semantic, instance, and panoptic segmentation. How do these tasks build upon object detection, and what architectural innovations enable pixel-level predictions while preserving spatial detail?
+4.8 Compare CNN-based segmentation architectures (e.g., U-Net, Mask R-CNN) with transformer-based models such as SAM. What are the strengths and limitations of each approach in terms of spatial precision, scalability, and generalization? How does SAM leverage the massive SA-1B dataset to achieve zero-shot segmentation across diverse domains?
+5.1 Large Language Models(LLMs) learn to predict the next word in context during training. Explain how embeddings emerge as a byproduct of this process, how they capture semantic meaning, and why dynamic embeddings outperform static ones in downstream NLP tasks.
+5.2 Explain the significance of parameters such as Context Window, Max Tokens, and Temperature in shaping the behavior of LLMs. How do these parameters influence the output generated by an LLM?
+5.3 Compare and contrast supervised fine-tuning (SFT) and in-context learning as methods for adapting LLMs to specific tasks. What are the trade-offs in terms of computational resources, data requirements, and model performance?
+5.4 What are the main challenges associated with LLMs? How does Retrieval Augmented Generation (RAG) address these limitations, and how do vector databases play a role in implementing RAG effectively?
+5.5 Agentic AI frameworks like CrewAI allow for the creation of AI agents with specific goals and capabilities. Describe the key components of an AI agent within the CrewAI framework, including Crews, Agents, Tasks, Tools, and Processes. How does the concept of Chain-of-Thought reasoning enhance the decision-making process of a CrewAI agent?
+5.6 In agentic AI frameworks like CrewAI, what is the role of memory (short-term vs. long-term) in creating more adaptive and context-aware agents?
+6.1 Explain the concepts of tokenization, token normalization, and vectorization (numericalization) in the context of NLP. Make sure you explain: corpus, dictionary, vocab, stop words, stemming, and lemmatization. Briefly explain the difference between frequency based techniques to vectorize (BoW, TF-IDF), versus word embeddings
+6.2 In NLP, when vectorizing tokens, we strive for a dense vector representation of the information contained in that token, and for some kind of measurable similarity between similar word vectors. All this is accomplished by word embeddings like word2vec. First, explain 3 common types of vector similarity measurements, and second, explain the principle of word2vec embeddings (either via CBOW, or via Skip-gram method). And third: can you explain the concept of self-supervised training in this context?
+6.3 Discuss the limitations of Word2Vec embeddings. Explain why Word2Vec produces static, context-independent representations, how this causes problems with polysemous words (e.g., “bank”), and why it cannot capture sentence-level meaning or long-range dependencies.
+6.4 When modeling sequential data, like text or a time series, we have to be able to take context into account. Most common way to do this, is by employing a RNN. Explain the basic principles of this method.
+6.5 Explain why RNNs require memory when modeling sequential data. Describe how the hidden state functions as a dynamic memory that carries information from one timestep to the next. Why can the hidden state at a specific timestep be interpreted as a contextual word embedding, and what types of linguistic information does it encode?
+6.6 When using an RNN to model sequential data, we come across the problem of long term dependencies and vanishing gradients. Explain these problems, and their solutions (in the context of RNNs).
+6.7 Explain the components of an LSTM, that is, hidden state, cell state, and gates, and discuss their roles. How do the input, forget, and output gates manage information flow through the cell state to solve the short-term memory and vanishing gradient problems found in standard RNNs? What limitations still remain for LSTMs, especially concerning long sequences, computational cost, and parallelization?
+7.1 Explain the concept of sequence-to-sequence modelling in NLP and compare how RNN-based Seq2Seq networks and Transformer-based Seq2Seq models encode and map input sequences to output sequences. What are the strengths and weaknesses of each approach?
+7.2 Define transfer learning in NLP and explain how language models serve as the foundation for it. Describe the different transfer-learning strategies (feature-based, fine-tuning, prompting, instruction tuning, RLHF) and when each is appropriate.
+7.3 Explain the Transformer architecture in detail, covering stacked encoder/decoder blocks, multi-head self-attention and cross-attention, positional encodings, and residual connections. Why does this design outperform RNN-based architectures on many NLP tasks?
+7.4 Describe the three main Transformer-based LLM architectures: encoder-only, decoder-only, and encoder–decoder. For each type, give example models and explain which tasks they are best suited for and why.
+7.5 Explain why using a fixed-length context vector in vanilla Seq2Seq models leads to an information bottleneck. How does the attention mechanism solve this, and why does it improve translation and other Seq2Seq tasks?
+7.6 Explain conceptually how self-attention computes relevance between tokens. Why is multi-head attention necessary, and what advantages does it provide in capturing different linguistic relationships?
+7.7 Describe where self-attention and cross-attention appear in the encoder and decoder of the original Transformer architecture, and explain the function each mechanism serves in the overall model.
+8.1 Explain how Vision Transformers (ViTs) adapt the Transformer architecture to images. Describe how images are split into patches, how patch embeddings are created, and how self-attention enables ViTs to model global spatial relationships. Compare this to how CNNs model local patterns, and discuss when one approach may be more effective than the other.
+8.2 Compare major multimodal Transformer architectures: single-stream, dual-stream, contrastive dual-encoder, and fusion-generative models. For each architecture type (e.g., VisualBERT, ViLBERT, CLIP, BLIP), explain how vision and language inputs are processed and fused, and discuss the main advantages and limitations of each approach.
+8.3 CLIP uses contrastive pretraining on large-scale noisy data. Explain how contrastive learning works in CLIP, why dataset scale and diversity (e.g., WebImageText) are critical, and how CLIP performs well on zero-shot classification.
+8.4 Explain how BLIP’s architecture enables both image–text alignment and text generation. Why was this generative shift important for subsequent multimodal LLMs like BLIP-2, LLaVA, GPT-4, and Gemini?
+8.5 Describe how BLIP learns aligned multimodal representations through its three pretraining objectives: contrastive learning (ITC), image–text matching (ITM), and image-conditioned captioning. Explain how each objective contributes to vision–language alignment, and why this alignment is essential for downstream tasks such as image captioning, VQA, and cross-modal retrieval.
+8.6 Describe the conceptual challenge BLIP-2 solves. How does this approach differ from earlier multimodal Transformers, and why did it influence modern multimodal LLMs?
+8.7 Discuss how shared embedding spaces enable cross-modal tasks such as image–text retrieval. Explain what it means for images and text to share the same latent space, how similarity is computed, and why well-aligned embeddings make cross-modal retrieval intuitive and effective.
+10.1 Suppose we record all information on our students (gender, race, height, shoe size, schooling history, profession of parents, …) and use this to only allow students with a reasonable chance of succeeding to start in the first year. Would that be a good idea? Would it be an ethical idea? (Good: something that works, that does what it is supposed to, Ethical: Being in accordance with the accepted principles of right and wrong that govern the conduct of a profession. E.g., robbing a bank is a good idea because it gets you a lot of money fast, but it isn’t an ethical idea because it is illegal and people may die.)
+10.2 Suppose we record all school-related information on our students (class attendance, exam results, how long they studied, …) and compare this with the results of students finishing the first year, it would give us an insight in their chances of finishing our program in a timely fashion. What if we forbid students that we think would not finish or take more than 4 years to continue in our program. Would that be a good/ethical idea? What if we wouldn’t forbid them, but simply gave them a very strong warning (unless you dramatically change some of these parameters, you won’t be finishing this program according to the data). Would that be a good/ethical idea?
+11.1 "The model should generalize to unseen data if you are using it to predict. If it’s just to explain the data overfitting isn’t a problem." Explain!
+11.2 What are the key differences between classification and regression in supervised learning? Can you provide examples of each?
+11.3 How does the concept of multidimensional space help in understanding the results of unsupervised learning algorithms?
+11.4 Why is feature engineering crucial in predictive modeling? Can you give an example of a feature that significantly improved a model's performance?
+11.5 What are the differences between linear and polynomial regression? When might you choose one over the other?
+11.6 Why is RMSE a preferred metric for evaluating regression models? What are its advantages and disadvantages compared to other metrics?
+11.7 What can residuals tell us about the performance of a model? How can you use residuals to improve your model?
+12.1 What is the difference between classification and regression models?
+12.2 Can you give examples of real-world problems that would use classification vs regression?
+12.3 What kind of questions or predictions are best suited for regression models?
+12.4 What are the main types of machine learning? How do they differ?
+12.5 Why do we split the dataset into training and test sets? How does this help in evaluating the model's performance?
+12.6 Why do we split data into training, validation, and test sets?
+12.7 What could go wrong if you don’t properly randomize your data before splitting?
+12.8 What is the role of the validation set when tuning model parameters?
+12.9 How can the sensitivity to the train/test split affect model performance? What strategies can you use to mitigate this sensitivity?
+12.10 Why is it important for a model to generalize to unseen data? What are the risks of a model that doesn't generalize well?
+12.11 What are the signs of overfitting and underfitting in a model? How can you address these issues?
+12.12 What is the bias-variance tradeoff? How do you find the right balance between bias and variance in a model?
+12.13 How do you model more complex patterns in data? What techniques can be used to capture these patterns effectively?
+12.14 Why is it important to start with data exploration before modeling?
+12.15 How do you determine if a model is good? What metrics and methods can you use to evaluate its performance?
+12.16 What does RMSE (Root Mean Square Error) tell us about a model's performance? Why is it important to compare RMSE on both training and test datasets?
+12.17 What does RMSE measure and why is it useful?
+12.18 How does RMSE differ from MAE?
+12.19 What does R² tell us about a regression model?
+12.20 Why do classification metrics not apply to regression problems?
+12.21 What are TP, FP, FN, and TN in a confusion matrix?
+12.22 Give some examples on why you'd want to optimize a model towards more TP (and more FP) or more TN (and more FN).
+12.23 What does sensitivity (recall) measure, and why is it important in medical diagnostics?
+12.24 What does specificity measure, and when is it more important than sensitivity?
+12.25 Can you think of a scenario where high sensitivity is preferred over high specificity, and vice versa?
+12.26 What does the F1-score balance, and when is it most useful?
+12.27 What challenges arise when evaluating multiclass classification models?
+12.28 What parameters can be calculated to assess the quality of multiclass classification models?
+12.29 What is the difference between macro and micro averaging?
+12.30 In multiclass classification, what are macro and micro average? What are the advantages of both?
+12.31 When would you use macro average over micro average?
+12.32 What does changing the classification threshold do to sensitivity and specificity?
+12.33 What is an ROC and the AUC?
+12.34 What does the ROC curve represent?
+12.35 Why is the diagonal line in an ROC curve considered a “random classifier”?
+12.36 How can ROC curves help compare different models?
+12.37 What does AUC-ROC measure and why is it useful?
+12.38 Why might ROC curves be misleading in imbalanced datasets?
+13.1 What makes a model "generalize well," and why is that more important than just fitting the training data?
+13.2 How can we tell if a model is too simple or too complex for the problem we're trying to solve?
+13.3 Why might a model that performs well on training data still fail in real-world applications?
+13.4 What are the risks of using overly complex models, even if they reduce training error?
+13.5 How does the bias-variance tradeoff influence the choice of model complexity?
+13.6 Why is it important to split data into training, validation, and test sets — and what could go wrong if we don’t?
+13.7 How does the size of your dataset influence how you should split it?
+13.8 Why is it dangerous to tune a model using the test set?
+13.9 What does RMSE really tell us about a model’s performance, and when might it be misleading?
+13.10 How can we model non-linear relationships without resorting to overly complex functions?
+13.11 What are the benefits and drawbacks of using splines or polynomial regression to capture complex patterns?
+13.12 Why is sensitivity to the train/test split (variance) a problem, and how can we detect it?
+13.13 How does cross-validation help us build more reliable models, especially with limited data?
+13.14 Why is stratified splitting important in classification problems, and what happens if we ignore it?
+13.15 What are the trade-offs between bagging and boosting in ensemble learning?
+13.16 Why does combining weak models often result in a strong model?
+13.17 How does bootstrapping help when we don't have enough data?
+13.18 What makes gradient boosting different from random forests, and when might one be preferred over the other?
+13.19 Why is XGBoost often considered better than traditional gradient boosting?
+13.20 What are the risks of using ensemble methods without understanding the individual models involved?
+13.21 How do linear models help us understand relationships in data, even if they’re not the most accurate predictors?
+13.22 What assumptions do linear models make, and how can we check if those assumptions hold?
+13.23 Why might regularization be necessary in linear models, and how does it help?
+13.24 How can linear models be used to remove dominant effects in data to reveal subtler patterns?
+13.25 What makes support vector machines effective in high-dimensional spaces?
+13.26 Why is the choice of kernel so important in SVMs?
+13.27 How does k-nearest neighbors differ from other models in how it “learns”?
+13.28 What are the limitations of k-NN in high-dimensional or noisy datasets?
+13.29 Why does Naive Bayes work well despite its unrealistic assumptions?
+13.30 How do probabilistic models like Naive Bayes differ in philosophy from geometric or distance-based models?
+13.31 How does the ensemble methods stacking differ from bagging and boosting?
+13.32 Why is it important to understand the assumptions behind each model before applying it?
+13.33 Can you explain how a model simplifies reality? Why might different models be needed for the same phenomenon?
+13.34 How do models help us make predictions or decisions in complex systems? Can you think of a situation where using a model might lead to misleading conclusions?
+13.35 How do conceptual, mathematical, and computational models differ in their use and limitations? Can you give an example where one type is more appropriate than the others?
+13.36 Why is it important to understand the assumptions behind a model? How can model limitations affect the interpretation of results?
+13.37 What criteria would you use to judge whether a model is useful or accurate? Can a model be useful even if it’s not entirely accurate? Why or why not?
+14.1 Why is it important to clean and prepare data before applying machine learning techniques?
+14.2 What challenges might arise when scraping data from external sources, and how can they affect the reliability of your dataset?
+14.3 What are the risks of ignoring missing values or improperly handling them during data cleaning?
+14.4 Why is it crucial to use proper datetime datatypes instead of splitting dates into separate fields?
+14.5 Why is exploring data important? Think patterns, correlations, and potential issues...
+14.6 Why is domain expertise important during the data exploration phase?
+14.7 How do different modeling techniques (e.g., regression, clustering) depend on the quality and structure of your data?
+14.8 How do you determine whether your data is "tidy," and why does this matter for analysis?
+14.9 What problems can arise when variables, observations, or values are not properly separated in a dataset?
+14.10 How can outliers distort statistical analysis, and what methods can be used to detect and handle them?
+14.11 What is the difference between IQR and standard deviation when identifying outliers?
+14.12 When should you remove outliers versus transform or model them separately?
+14.13 How does data skewing affect averages and medians?
+14.14 What are examples of positively and negatively skewed data distributions?
+14.15 Why is it important to distinguish between categorical, ordinal, and nominal data types?
+14.16 Why do we one-hot encode?
+14.17 What are the pros and cons of imputing missing values using mean, median, or mode?
+14.18 What can advanced imputation techniques (e.g., regression, KNN) introduce into your model?
+14.19 What types of bias can affect data and models, and how can they be mitigated?
+14.20 Why is it critical to keep the test set isolated during model development?
+14.21 How does scaling affect different machine learning algorithms?
+14.22 What role does feature engineering play in improving model performance and generalization?
+14.23 How can derived features carry more predictive value than raw inputs?
+15.1 What is the difference between time series data and non-time-series data?
+15.2 Why can't 'normal' models be applied to time series data?
+15.3 How can trends and seasonality in time series data affect forecasting accuracy?
+15.4 Why is it inappropriate to randomly shuffle data when splitting time series into train and test sets?
+15.5 How do different methods of filling missing values (e.g., forward fill, interpolation, ...) impact model performance?
+15.6 What are the benefits and drawbacks of smoothing time series data before modeling?
+15.7 Why is RMSE a suitable metric for evaluating time series models, and when might it be misleading?
+15.8 How do sparse and dense datasets differ in structure and use cases?
+15.9 When would you choose to convert sparse data into a dense format, and what are the trade-offs?
+15.10 What is stationarity in time series modeling, and how can you test for it?
+15.11 How does stability differ from stationarity?
+15.12 What does first-order differencing achieve, and why is it useful for models like ARIMA?
+15.13 What are inverse transformations and when do we need them?
+15.14 How does autocorrelation help identify seasonality in time series data?
+15.15 What insights can you gain from an autocorrelation plot, and how do you interpret spikes?
+15.16 How do ARIMA, DeepAR+, ETS, NPTS, and Prophet differ in their approach to time series forecasting?
+15.17 Why might you choose a non-parametric model like DeepAR+ or NPTS over parametric ones?
+15.18 What are the strengths and limitations of Prophet, and in what scenarios is it most effective?
+15.19 How does the choice of model depend on the characteristics of your time series data (e.g., missing values, seasonality, multivariate vs univariate)?
+16.1 How does unsupervised learning differ from supervised learning in terms of goals and outcomes?
+16.2 Why is clustering considered a form of pattern recognition rather than prediction?
+16.3 What challenges arise when clustering data in more than two dimensions?
+16.4 How does the KMeans algorithm determine which data points belong to which cluster?
+16.5 What does the concept of "inference" mean in the context of unsupervised learning?
+16.6 Why might a clustering model struggle to correctly group similar data, such as in the Iris dataset?
+16.7 How can inertia help determine the optimal number of clusters in a dataset?
+16.8 What does the "elbow" in an inertia plot represent, and how should it guide model selection?
+16.9 Why does scaling affect the performance of clustering algorithms like KMeans?
+16.10 What are the consequences of using unscaled data in distance-based clustering?
+16.11 How do normalization and standardization differ, and when should each be used?
+16.12 Why is it important to apply the same scaling parameters to new data during inference?
+16.13 How can clustering be used to support supervised learning tasks?
+16.14 What are the limitations of unsupervised learning when it comes to interpreting results?
+16.15 How does scaling impact the interpretability and reliability of clustering outcomes?
