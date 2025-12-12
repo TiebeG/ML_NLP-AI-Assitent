@@ -41,17 +41,20 @@ The assistant is built as a **multi-agent system** using **LangGraph**.
   - Quiz generation  
 
 - **Teacher / Explanation Agent**  
-  Provides structured explanations for ML concepts.
+  Provides structured explanations for ML concepts and synthesizes retrieved information.
 
 - **RAG Agent**  
   Retrieves relevant content from course slides and documents.
+
+- **Online Search Agent (Fallback)**  
+  Performs an online search when the RAG agent does not return sufficient information, allowing the assistant to answer questions that go beyond the course material.
 
 - **Quiz Agent**  
   Generates multiple-choice and reflection questions based on official discussion topics.
 
 - **Memory Agents**
-  - Memory Retriever: recalls relevant long-term memory  
-  - Memory Writer: stores useful information automatically or on request  
+  - **Memory Retriever**: recalls relevant long-term memory  
+  - **Memory Writer**: stores useful information automatically or on request  
 
 
 ## 🧠 Long-Term Memory
@@ -96,6 +99,7 @@ Instead of a full authentication system, the app uses a **4-digit PIN code**:
 │   ├── build_vector_db.ipynb    # RAG vector database creation
 │   ├── test_rag.ipynb           # RAG testing
 │   ├── test_router.ipynb        # Router testing
+│   └── test_onlinesearch.ipynb  # Online Search
 │
 └── README.md
 ```   

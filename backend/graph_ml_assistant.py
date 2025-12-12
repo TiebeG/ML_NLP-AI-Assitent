@@ -21,6 +21,7 @@ if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 from backend.tools_rag import course_docs_search
+from backend.tools_web import web_search
 from backend.router_agent import classify_query
 from backend.quiz_agent import generate_quiz
 from backend.memory import recall_memory, store_memory
@@ -45,14 +46,10 @@ def router_node(state: GraphState) -> GraphState:
 
     state["route"] = route_info.get("type")
     state["chapter"] = route_info.get("chapter")
-
     return state
 
 
 def memory_retriever_node(state: GraphState) -> GraphState:
-    """
-    Retrieve relevant long-term memories based on the latest user message.
-    """
     if not state.get("messages"):
         state["memory"] = ""
         return state
@@ -73,16 +70,10 @@ def memory_retriever_node(state: GraphState) -> GraphState:
 
 
 def memory_writer_node(state: GraphState) -> GraphState:
-    """
-    Hybrid memory write:
-    - Explicit: user says "remember this", "save this", ...
-    - Automatic: assistant gave a long explanatory response.
-    """
     messages = state.get("messages", [])
     if len(messages) < 2:
         return state
 
-    # Last is assistant, before that is user
     last_ai = messages[-1]
     last_user = messages[-2]
 
@@ -109,23 +100,94 @@ def memory_writer_node(state: GraphState) -> GraphState:
     return state
 
 
-def teacher_rag_node(state: GraphState) -> GraphState:
+def _rag_is_useful(rag_text: str) -> bool:
+    """
+    Heuristic to decide if RAG has enough information.
+    Adjust as needed.
+    """
+    if not rag_text:
+        return False
+    txt = rag_text.strip().lower()
+
+    # Common "no info" patterns (adjust if your RAG tool returns different text)
+    bad_markers = [
+        "no relevant",
+        "no results",
+        "nothing found",
+        "i couldn't find",
+        "not found",
+        "empty",
+    ]
+    if any(m in txt for m in bad_markers):
+        return False
+
+    # Too short => probably useless
+    if len(txt) < 200:
+        return False
+
+    return True
+
+
+def teacher_rag_or_web_node(state: GraphState) -> GraphState:
+    """
+    Primary path for course-related questions:
+    1) Try RAG from course docs
+    2) If insufficient → fallback to online web search
+    """
     user_msg = state["messages"][-1].content
-    rag_context = course_docs_search.invoke(user_msg)
     memory_context = state.get("memory", "") or ""
+
+    rag_context = course_docs_search.invoke(user_msg)
+    use_rag = _rag_is_useful(rag_context)
+
+    if use_rag:
+        system_content = (
+            "You are a Machine Learning course assistant.\n"
+            "Answer using the COURSE EXCERPTS provided.\n"
+            "If the excerpts do not contain enough info, say so briefly.\n\n"
+        )
+        if memory_context:
+            system_content += f"{memory_context}\n\n"
+        system_content += f"COURSE EXCERPTS:\n{rag_context}\n"
+        system_msg = SystemMessage(content=system_content)
+
+        result = llm_teacher.invoke([system_msg] + state["messages"])
+        state["messages"].append(result)
+        return state
+
+    # --- WEB FALLBACK ---
+    web = web_search(user_msg, max_results=5)
+
+    if not web["ok"]:
+        system_content = (
+            "You are a Machine Learning course assistant.\n"
+            "The course docs did not contain enough information and web search is unavailable.\n"
+            "Explain what you can confidently from general ML knowledge, and clearly state limits.\n\n"
+        )
+        if memory_context:
+            system_content += f"{memory_context}\n\n"
+        system_msg = SystemMessage(content=system_content)
+        result = llm_teacher.invoke([system_msg] + state["messages"])
+        state["messages"].append(result)
+        return state
+
+    sources_block = "\n".join(
+        f"- {r['title']} ({r['url']})\n  {r['content']}"
+        for r in web["results"]
+        if r.get("url")
+    )
 
     system_content = (
         "You are a Machine Learning course assistant.\n"
-        "Use the course excerpts AND the long-term memory if helpful.\n\n"
+        "The course docs did not contain enough information; use the WEB SOURCES below.\n"
+        "Write a clear answer.\n"
+        "At the end, add a short 'Sources:' list with the URLs you used.\n\n"
     )
-
     if memory_context:
         system_content += f"{memory_context}\n\n"
-
-    system_content += f"Course excerpts:\n{rag_context}\n"
+    system_content += f"WEB SOURCES:\n{sources_block}\n"
 
     system_msg = SystemMessage(content=system_content)
-
     result = llm_teacher.invoke([system_msg] + state["messages"])
     state["messages"].append(result)
     return state
@@ -136,10 +198,11 @@ def teacher_general_node(state: GraphState) -> GraphState:
 
     content = (
         "You are a Machine Learning teaching assistant. "
-        "Explain clearly with examples, without using course documents directly."
+        "Explain clearly with examples.\n"
+        "If you are unsure, say so and suggest what to look up.\n"
     )
     if memory_context:
-        content += "\n\nHere is long-term memory about this student or past sessions:\n"
+        content += "\nHere is long-term memory about this student or past sessions:\n"
         content += memory_context
 
     system_msg = SystemMessage(content=content)
@@ -149,10 +212,10 @@ def teacher_general_node(state: GraphState) -> GraphState:
 
 
 def quiz_node(state: GraphState) -> GraphState:
+    # QUIZ PATH UNCHANGED ✅ (no web search here)
     chapter = state.get("chapter")
     quiz = generate_quiz(chapter=chapter, n_questions=5)
-    ai_msg = AIMessage(content=quiz)
-    state["messages"].append(ai_msg)
+    state["messages"].append(AIMessage(content=quiz))
     return state
 
 
@@ -161,29 +224,30 @@ def build_graph():
 
     builder.add_node("memory_retriever", memory_retriever_node)
     builder.add_node("router", router_node)
-    builder.add_node("teacher_rag", teacher_rag_node)
+
+    # NOTE: this node now handles BOTH: RAG + web fallback
+    builder.add_node("teacher_rag_or_web", teacher_rag_or_web_node)
+
     builder.add_node("teacher_general", teacher_general_node)
     builder.add_node("quiz", quiz_node)
     builder.add_node("memory_writer", memory_writer_node)
 
     builder.set_entry_point("memory_retriever")
-
     builder.add_edge("memory_retriever", "router")
 
     builder.add_conditional_edges(
         "router",
         lambda state: state.get("route"),
         {
-            "rag_query": "teacher_rag",
+            "rag_query": "teacher_rag_or_web",
             "general_explanation": "teacher_general",
             "quiz_request": "quiz",
         },
     )
 
-    builder.add_edge("teacher_rag", "memory_writer")
+    builder.add_edge("teacher_rag_or_web", "memory_writer")
     builder.add_edge("teacher_general", "memory_writer")
     builder.add_edge("quiz", "memory_writer")
-
     builder.add_edge("memory_writer", END)
 
     return builder.compile()
