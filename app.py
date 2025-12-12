@@ -9,7 +9,7 @@ import streamlit as st
 from langchain_core.messages import HumanMessage, AIMessage
 
 # ----------------------------------------------------
-# Ensure backend import works
+# Backend import
 # ----------------------------------------------------
 BACKEND_DIR = os.path.join(os.path.dirname(__file__), "backend")
 if BACKEND_DIR not in sys.path:
@@ -19,42 +19,44 @@ from backend.graph_ml_assistant import graph_app
 
 
 # ----------------------------------------------------
-# DETECT ENVIRONMENT & SET DB PATH
+# ENV DETECTION (local vs Streamlit Cloud)
 # ----------------------------------------------------
 if os.path.exists("/mount/data"):
-    # Streamlit Cloud
     DATA_DIR = "/mount/data"
 else:
-    # Local development
     DATA_DIR = os.path.join(os.getcwd(), "local_data")
 
 os.makedirs(DATA_DIR, exist_ok=True)
-
 DB_PATH = os.path.join(DATA_DIR, "chats.db")
 
 
 # ----------------------------------------------------
-# SQLITE SETUP
+# DATABASE
 # ----------------------------------------------------
 conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 cursor = conn.cursor()
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS chats (
-    chat_id TEXT PRIMARY KEY,
+    user_id TEXT,
+    chat_id TEXT,
     name TEXT,
     messages TEXT,
-    last_updated REAL
+    last_updated REAL,
+    PRIMARY KEY (user_id, chat_id)
 )
 """)
 conn.commit()
 
 
 # ----------------------------------------------------
-# DB HELPERS
+# DB HELPERS (USER-SCOPED)
 # ----------------------------------------------------
-def load_chats():
-    cursor.execute("SELECT chat_id, name, messages, last_updated FROM chats")
+def load_chats(user_id):
+    cursor.execute(
+        "SELECT chat_id, name, messages, last_updated FROM chats WHERE user_id = ?",
+        (user_id,)
+    )
     rows = cursor.fetchall()
     chats = {}
     for chat_id, name, messages, last_updated in rows:
@@ -66,13 +68,15 @@ def load_chats():
     return chats
 
 
-def save_chat(chat_id, chat):
+def save_chat(user_id, chat_id, chat):
     cursor.execute(
         """
-        INSERT OR REPLACE INTO chats (chat_id, name, messages, last_updated)
-        VALUES (?, ?, ?, ?)
+        INSERT OR REPLACE INTO chats
+        (user_id, chat_id, name, messages, last_updated)
+        VALUES (?, ?, ?, ?, ?)
         """,
         (
+            user_id,
             chat_id,
             chat["name"],
             json.dumps(chat["messages"]),
@@ -82,16 +86,22 @@ def save_chat(chat_id, chat):
     conn.commit()
 
 
-def delete_chat(chat_id):
-    cursor.execute("DELETE FROM chats WHERE chat_id = ?", (chat_id,))
+def delete_chat(user_id, chat_id):
+    cursor.execute(
+        "DELETE FROM chats WHERE user_id = ? AND chat_id = ?",
+        (user_id, chat_id)
+    )
     conn.commit()
 
 
 # ----------------------------------------------------
 # SESSION INIT
 # ----------------------------------------------------
+if "user_id" not in st.session_state:
+    st.session_state.user_id = None
+
 if "chats" not in st.session_state:
-    st.session_state.chats = load_chats()
+    st.session_state.chats = {}
 
 if "current_chat" not in st.session_state:
     st.session_state.current_chat = None
@@ -101,13 +111,30 @@ if "rename_id" not in st.session_state:
 
 
 # ----------------------------------------------------
+# USER LOGIN (4-DIGIT CODE)
+# ----------------------------------------------------
+if st.session_state.user_id is None:
+    st.title("🔐 Enter your 4-digit code")
+    pin = st.text_input("4-digit code", max_chars=4)
+
+    if pin and pin.isdigit() and len(pin) == 4:
+        st.session_state.user_id = pin
+        st.session_state.chats = load_chats(pin)
+        st.session_state.current_chat = None
+        st.rerun()
+    else:
+        st.info("Enter any 4-digit number to continue.")
+    st.stop()
+
+
+# ----------------------------------------------------
 # HELPERS
 # ----------------------------------------------------
-def auto_title_from_text(text):
+def auto_title(text):
     return " ".join(text.split()[:6]).title() or "New Chat"
 
 
-def create_new_chat():
+def create_chat():
     chat_id = str(uuid.uuid4())
     chat = {
         "name": "New Chat",
@@ -116,17 +143,24 @@ def create_new_chat():
     }
     st.session_state.chats[chat_id] = chat
     st.session_state.current_chat = chat_id
-    save_chat(chat_id, chat)
+    save_chat(st.session_state.user_id, chat_id, chat)
 
 
 # ----------------------------------------------------
 # SIDEBAR
 # ----------------------------------------------------
 with st.sidebar:
-    st.markdown("## 💬 ML Assistant")
+    st.markdown(f"## 💬 ML Assistant")
+    st.caption(f"User code: **{st.session_state.user_id}**")
 
     if st.button("➕ New Chat", use_container_width=True):
-        create_new_chat()
+        create_chat()
+        st.rerun()
+
+    if st.button("🔄 Change User", use_container_width=True):
+        st.session_state.user_id = None
+        st.session_state.chats = {}
+        st.session_state.current_chat = None
         st.rerun()
 
     st.markdown("---")
@@ -151,7 +185,7 @@ with st.sidebar:
 
         with col3:
             if st.button("x", key=f"delete_{chat_id}"):
-                delete_chat(chat_id)
+                delete_chat(st.session_state.user_id, chat_id)
                 del st.session_state.chats[chat_id]
                 if st.session_state.current_chat == chat_id:
                     st.session_state.current_chat = None
@@ -162,7 +196,7 @@ with st.sidebar:
         new_name = st.text_input("Rename chat", st.session_state.chats[cid]["name"])
         if st.button("Save"):
             st.session_state.chats[cid]["name"] = new_name
-            save_chat(cid, st.session_state.chats[cid])
+            save_chat(st.session_state.user_id, cid, st.session_state.chats[cid])
             st.session_state.rename_id = None
             st.rerun()
 
@@ -172,7 +206,7 @@ with st.sidebar:
 # ----------------------------------------------------
 if st.session_state.current_chat is None:
     st.markdown("## 👋 Welcome")
-    st.markdown("Create a new chat from the sidebar.")
+    st.markdown("Create or select a chat from the sidebar.")
     st.stop()
 
 chat_id = st.session_state.current_chat
@@ -188,7 +222,7 @@ user_input = st.chat_input("Ask anything from the ML course...")
 
 if user_input:
     if chat["name"] == "New Chat" and not chat["messages"]:
-        chat["name"] = auto_title_from_text(user_input)
+        chat["name"] = auto_title(user_input)
 
     chat["messages"].append({"role": "user", "content": user_input})
 
@@ -206,5 +240,5 @@ if user_input:
     chat["messages"].append({"role": "assistant", "content": reply})
     chat["last_updated"] = datetime.datetime.now().timestamp()
 
-    save_chat(chat_id, chat)
+    save_chat(st.session_state.user_id, chat_id, chat)
     st.rerun()
