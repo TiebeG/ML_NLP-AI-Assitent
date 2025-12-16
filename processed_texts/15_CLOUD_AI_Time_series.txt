@@ -1,0 +1,265 @@
+Chapter 8 – Time series
+Artificial Intelligence
+Non-time-series data
+We have days and record temperature and ice cream sales per day
+The dataset has one average for temperature and one for sales
+These numbers wouldn’t change if we moved the days around
+Swap day 2 and 4
+
+
+2
+Time series data
+Definition: Time series data is a sequence of data points collected or recorded at specific time intervals.
+The time component is critical: the data points are ordered chronologically.
+Observations at different time points often exhibit dependencies. Future values can depend on past ones (depicting trends and seasonality).
+Time intervals can be regular (hourly, daily, monthly) or irregular, depending on the domain (e.g., stock prices vs. event-driven data).
+A time series can be univariate (one variable measured over time) or multivariate (multiple variables measured simultaneously).
+Applications: Forecasting (sales, stock prices), anomaly detection (in industrial equipment), and pattern recognition (speech, ECG data).
+
+3
+Forecasting use cases
+4
+Sales and demand forecasts
+Energy consumption 
+Inventory projections
+Weather forecasts
+Trends in time series data
+A trend is a long-term increase or decrease in the data over time, reflecting an underlying direction in the data.
+There are the trends we also see in ‘normal’ data:
+Upward, downward, linear or exponential, logarithmic (= reverse exponential)
+In ‘normal’ data this required two variables, now only one
+But there are also time-series specific types of trends:
+Seasonal
+
+5
+Train/test-splits
+In regular ML:
+You can randomly shuffle data before splitting
+Future labels don't depend on previous ones
+In time series:
+Order matters — today depends on yesterday
+You must never use future data to predict the past
+The most common solution: split at a certain point in time
+Train on the past, test on the near past and do inference on the future
+Retrain the model as new data becomes available
+6
+Filling NaN values
+7
+Note: Zero is sometimes the perfect fill value
+Outliers
+8
+outliers
+
+
+Smoothing function
+
+Why are you smoothing?
+Data preparation
+Visualization
+How does smoothing affect your outcome?
+Cleaner data to model
+Model compatibility
+Production improvements
+Evaluation metric: RMSE
+9
+Error is the difference between the actual 
+target value and the forecasted value
+RMSE is the square of the errors.
+
+
+
+Works best for a model where most errors are of similar size 
+Sparse vs dense datasets
+How frequently and consistently data points are recorded?
+A dense dataset has a value for every time step in the series — even if nothing changed.
+Regular intervals: Data is recorded consistently (every minute, every hour)
+No missing timestamps.
+A sparse dataset only includes entries when something happens
+Irregular intervals
+Gaps between events
+
+
+10
+Sparse vs dense datasets
+ Use Dense Datasets when:
+You have high-frequency data without much sparsity.
+You need simpler calculations and visualizations.
+Memory is not a constraint.
+
+Use Sparse Datasets when:
+Your data has many zeros or missing values (e.g., binary indicators, intermittent signals).
+You’re working with event-driven or irregularly changing data.
+Memory efficiency is essential due to dataset size.
+
+11
+For applications where you need both memory efficiency and the continuity of dense datasets (like with rolling windows on sparse data), it’s often helpful to start with sparse data and convert it to dense format only for specific analyses.
+Why It Matters
+Dense data is easier to work with for things like rolling averages, resampling, and plotting
+Sparse data is more compact and efficient when recording only changes or events (common in logs or event-driven systems)
+
+To perform most time-series analysis, sparse datasets are typically converted to dense format
+Using techniques like .resample() and .ffill() in pandas
+12
+Stationarity in time series
+A stationary time series is one whose statistical properties (like mean, variance, autocorrelation) are constant over time.
+No trend or seasonality
+The series "looks the same" at any point in time
+It's easier to model and predict because the behavior is consistent
+
+
+The mean stays around 10
+No trend (not increasing or decreasing over time)
+Variance is stable
+13
+Stability (in control systems or broader dynamics)
+Stability usually refers to whether a system returns to equilibrium after a disturbance.
+In a stable system, values stay bounded or return to a steady state
+This means a process that doesn’t explode or spiral out of control
+Unstable:
+
+
+Stable (but not stationary):
+14
+Stability and stationarity
+Stationary: Data revolves around a center point
+Stable (non stationary): Has an upward trend (mean and variance change over time)
+Non-stable: data grows exponentially with increasing variance
+15
+Stability and stationarity
+If you apply a first-order differencing to a non-stationary dataset it becomes stationary
+Constant mean with constant variance
+This makes is suitable for many time series models like ARIMA
+
+16
+First order differencing
+You deduct the previous datapoint from every datapoint
+
+Example:
+17
+Why Use It?
+Removes trend, making data more stable over time
+Many models like ARIMA assume stationary input
+Makes it easier to identify seasonality or cycles
+Stationarity
+[You know you’re living on the edge when you need youtube videos with less than 1.000 likes.]
+Link also in the notes below
+The notebook used is also exercise 8.1
+
+
+18
+Stationarity transformation
+The original data was up to 600, the new data revolves around 0
+How would a model trained on this new data yield a number I can use?
+Inverse Transformations
+After your model makes predictions on the transformed data, you undo the transformations to convert the results back to the original scale
+
+
+When predicting multiple steps ahead, this has to be applied cumulatively
+Libraries like statsmodels provide built-in tools for forecasting and inverting transformations 
+If you're chaining your own steps you need to manually reverse them
+
+19
+Stationarity transformation
+Sounds exhausting! Can’t ARIMA do this for me?
+Yes, ARIMA can do differencing internally
+and it’s often better to let it handle it
+An ARIMA(p, d, q) model:
+p = autoregressive order (lags of the series)
+d = order of differencing
+q = order of the moving average
+And what numbers do we need for p, d and q? Tuning!
+Gridsearch: computationally expensive
+Auto_arima: Uses statistical tests
+20
+Autocorrelation
+Correlation is the measure in which two variables correlate
+Warmer -> more ice cream sales
+When looking at non-time-data, the order of the rows doesn’t matter
+Auto-correlation is the measure in which a value correlates to a past version of itself
+This value would help us to identify seasonality in the data
+The thing with seasonality is it depends on the size of the season:
+“Christmas” has a seasonality of 1 year
+“The Monday blues” have a seasonality of 1 week
+If you don’t know your if dataset is seasonal, you also don’t know what size the season will have
+That is why autocorrelation is calculated on different season sizes and you can decide which season (if any) fits your data
+
+
+21
+Autocorrelation
+An autocorrelation plot on the airpassengers data
+Data above: every year (12 months) looks roughly the same
+A lot of passengers in the summer, less in winter
+Autocorrelation plot:
+Spikes at 12 (one year ago) and 24 (two years ago)
+
+22
+The models
+We’ve been talking about the arima a lot, but what is it? And what are the other models?
+
+Arima
+DeepAR+
+Exponential Smoothing (ETS)
+Non-Parametric Time Series
+Prophet
+
+23
+Arima
+Autoregressive integrated moving average.
+This means it works using a moving (rolling) average over the data.
+Good model when your data is non-stationary in terms of mean, but not in terms of variance.
+This problem, the not being able to cope with variance, is somewhat dealt with by applying a seasonal differencing.
+The autoregressive-part means that the predicted value is partly predicted by using a regression on earlier versions of itself.
+
+
+24
+DeepAR+
+DeepAR+ is only implemented on AWS.
+It uses a recurrent neural network, meaning the neurons are sometimes connected back to themselves.
+A special case of neural networks, which is the focus of the Big Data course.
+The major difference between the other models is that a neural network needs to be trained: DeepAR+ will thus take some time for training and will need a lot of data (more than the actual data we want to predict)
+Once these conditions have been fulfilled it should outperform the 'normal' models like ARIMA and ETS.
+
+25
+ETS
+Exponential Smoothing is a technique that can only be applied to univariate datasets.
+Time and one column of data
+If you have a list of ice cream sales during the previous summer annotated with the temperature, ETS will not be looking at the temperature (and will therefore not be your go-to option).
+If you have a list of cyclists accross a bike-highway ETS is a valid option.
+
+It works by calculating a weighted average over all observations. These weights decrease exponentially over time.
+
+26
+NPTS
+Arima and ETS are parametric models. This means they calculate some parameters based on the input data and only need these parameters to predict the future data.
+Very transparent and requires less compute
+A non-parametric model does not simply calculate these parameters but requires the current state in addition to some calculated parameters.
+Harder to compute
+Requires way more data
+Does tend to yield better results.
+DeepAR+ is an example of a non-parametric model.
+NPTS or Non-Parametric Time Series predicts by sampling from past values.
+(This sounds to easy to be true, which is in fact the case. The actual theory is way deeper, but also nothing that can be summarized in three lines. It does however give a good starting point which isn't technically incorrect.)
+There are many variants of NPTS, like Seasonal NPTS, Climatological Forecaster and Seasonal Climatological Forecaster.
+
+
+27
+Prophet
+Prophet is made by Facebook, but it has been made available publicly as open source software.
+It can detect multiple seasonal components in your data
+The weekly trend and yearly trend for bikers on highways. 
+Robust to missing data.
+
+Downside: Facebook will continue to support Prophet but is no longer making it better.
+Real cutting edge can now be found in NeuralProphet.
+This doesn't mean however that Prophet is a bad model to use, it's still a very good model that will yield dependable results.
+
+28
+Conclusion
+Time series are a special type of data where the data is time-related
+The statistical approach is different from ‘regular’ data and additional methods can be applied
+Sparse or dense representation
+Rolling average
+Stability, stationarity
+Time series also have their own models
+
+29

@@ -1,0 +1,610 @@
+1
+Deep Learning
+Natural Language Processing (NLP)
+LLMs - RAG - Vector Stores – MCP - Agentic AI
+Lesson Goals
+2
+Fundamentals of LLMs: Students will grasp the fundamentals of LLMs, understand their keycomponents like tokens and tokenization, and explore how they are used. 
+
+Word and Sentence Embeddings: Students will explore how text is represented in numerical form through embeddings, distinguish between static and dynamic embeddings, and understand how embedding spaces enable semantic similarity and retrieval.
+
+LLM Families and Parameters: Students will differentiate between various LLM families and understand the function of parameters such as context window, maximum tokens, and temperature.
+
+Uses of a pre-trained LLM: Students will compare different strategies for applying pre-trained language models to downstream tasks, including classical approaches such as fine-tuning, feature-based methods, and prompting as well as newer techniques like instruction tuning and RLHF.
+RAG and Vector Databases: Students will learn about RAG and how it addresses the limitations of LLMs, including hallucinations, by using external sources of knowledge. 
+
+Agentic AI and MCP: Students will understand how LLMs evolve into autonomous agents through planning, memory, and tool use, and how MCP enables these agents to connect with external tools and data sources.
+3
+IntroductionFrom NLP to Agentic AI
+		
+
+
+
+
+
+From NLP to Agentic AI
+4
+Humans naturally acquire and use language as their main means of communication
+The goal of NLP is to improve communication
+between humans and machines
+between humans
+NLP enables computers to process, understand, and generate language by learning statistical and structural patterns
+Large Language Models (LLMs) have revolutionized NLP by learning rich representations of meaning and context from vast amounts of text
+These models power Generative AI, enabling systems that can produce coherent, context-aware text, images, and other content
+From NLP to Agentic AI
+5
+Retrieval-Augmented Generation (RAG) extends LLMs with access to external knowledge, reducing hallucinations and improving factual accuracy
+Agentic AI builds upon LLMs and RAG by adding reasoning, planning, memory, and tool use, turning passive models into autonomous, goal-directed systems
+Yet, open challenges remain:current systems still lack trueunderstanding, grounding, andcommon sense comparable tohuman cognition
+6
+Large Language Models
+LLMs
+
+		
+
+
+
+
+
+7
+
+General idea of LLM
+8
+Language has become the interface between humans and machine through large language models or LLMs
+An LLM is a deep neural network that predicts the next word in a sequence based on patterns learned from vast amounts of texte.g.,
+LMs can use different neural architectures, but LLMs are typically based on the transformer architecture
+Transformers use self-attention and feedforward layers to model complex relationships in text
+
+
+Once upon a ___
+General idea of LLM
+9
+An LLM learns many different syntactic and semantic relationships between words, concepts, and ideas
+It represents words as numerical vectors, where each dimension corresponds to a specific relationship or linguistic feature
+
+The result is an embedding space that captures meaning
+
+Words and sentences with similar meanings are located close together within this space
+
+10
+LLMs building blocks(next lessons: deep dive into these parts)
+LLMs building blocks(next lessons: deep dive into these parts)
+11
+Tokenization
+12
+Tokenization is the process of translating strings (i.e. text) and converting them into sequences of tokens and vice versa
+
+Tokenization  https://tiktokenizer.vercel.app/ 
+13
+
+
+14
+Tokenization and Vectorization
+Tokenization and Vectorization
+15
+The LLM starts with a token embedding layer, which maps discrete tokens (via one-hot encoding) to continuous embedding vectors
+
+
+
+
+
+
+
+In each transformer block these embeddings are refined and contextualized so that they capture patterns useful for prediction
+
+
+Embeddings are numerical representations of meaning learned automatically by the model during training
+Embeddings emerge naturally during training
+
+Embeddings form the foundation of everything an LLM does, that is, understanding, reasoning, retrieving, generating, and comparing text
+
+
+Word Embeddings
+16
+The model learns to predict the next wordTo do that well, it must understand how words relate to contextThat understanding becomes encoded as vectors in the model’s internal layers
+
+
+
+Word Embeddings
+17
+The goal of embeddings is representation learning, that is, finding a way to represent words in a continuous numerical space so that the geometry reflects meaning
+
+Latent Space
+18
+The continuous numerical space of embeddings is called the latent space because:
+It represents the hidden, internal structure of language and meaning that the model discovers during training
+Each dimension encodes certain linguistic or semantic features, but these features are not labeled or interpretable in a human-readable way
+
+Inside an LLM, embeddings exist at every layer
+
+Each layer produces its own latent space which is a unique internal representation of language at that stage of processing
+
+Feature extraction can be done at different layers depending on what kind of information you want
+
+
+
+
+Word Embeddings: Static or Dynamic
+19
+Context-independent 
+(e.g., Word2Vec, GloVe)
+
+One embedding per word, regardless of how it is used
+Precomputed and fixed/static
+E.g., the word ‘bank’ has the same vector in ‘river bank’ and ‘bank account’ even though the meanings differ
+Context-dependent (e.g., BERT, GPT, modern LLMs)
+
+Different embeddings depending on the surrounding context
+Computed and updated dynamically
+E.g., the vector of ‘bank’ changes depending on whether the nearby words suggest finance or geography
+
+
+20
+
+21
+
+22
+
+Powered by
+LLM
+23
+Sentence embeddings
+24
+We can create embeddings at different levels:
+Token embeddings: individual words or subwords
+Sentence embeddings: a vector representing an entire sentence’s meaning
+Document embeddings: a vector aggregating meaning of longer texts
+
+In RAG systems, we often use sentence or paragraph embeddings to search for relevant chunks of text by meaning
+
+Sentence embeddings
+25
+To get a sentence embedding we need to combine the contextual token embeddings, e.g., by averaging or pooling
+However, this produces sentence embeddings that are:
+Unstable: The same sentence can map to a different point in the embedding space dependent on context, order, or batch 
+Not-comparable: The geometry of the space is not necessarily meaningful, that is, the relative positions of two sentence embeddings do not reliably correspond to their semantic similarity
+Embedding models
+26
+Embedding models are not general-purpose LLMs but specialized variants trained to produce stable, comparable embeddings for sentences
+E.g., OpenAI text-embedding-3, Cohere Embed, SentenceTransformers
+
+They are trained by fine-tuning a general-purpose LLM (e.g. GPT, BERT) on semantic similarity datasets (pairs of similar/dissimilar sentences)
+Embedding models produce semantic sentence embeddings that are context-dependent, sentence-level, and task-agnostic, meaning they can be used reliably for search, clustering, and retrieval
+
+
+
+
+27
+Two sentences can be similar in multiple ways, e.g., topic, sentiment, tone, paraphrasing, …
+When building systems like RAG we usually want topical similarity 
+
+
+
+
+Embedding models
+28
+Self-attention
+29
+In psychology, attention is the cognitive process of selectively concentrating on one or a few things while ignoring others 
+Self-attention is when attention is performed between tokens of the same sequence
+It refines or contextualizes the embedding of a word by considering the embeddings of related words in the sentence
+
+
+
+It is applied through multiple heads and layers, allowing the model to capture different kinds of relationships from nearby syntactic links to longer-range semantic dependencies and overall context
+
+Transfer Learning
+30
+Traditional NLP models were task-specific: each model  was trained from scratch on a small dataset
+Transfer learning flips this idea:
+Train a model once on a large, general corpus (e.g., books, web text)
+Then adapt or fine-tune it for many downstream tasks (e.g., classification, QA, summarization)
+This “transfers” language understanding from general training to specific tasks
+Modern LLMs (e.g., GPT, LLaMA) are massively pretrained using self-supervised objectives such as next word prediction
+These models learn universal linguistic and semantic patterns
+They serve as general-purpose foundations: one model, many tasks
+
+Evolution of Language Models
+31
+LLM Families(pre-trained models)
+32
+
+LLaMa: 
+
+Open Source
+
+33
+Ollama
+34
+OpenAI API - Groq
+35
+Common LLM Parameters
+36
+LLMs: (Bigger) Context Window
+37
+Context Window is the maximum number of tokens that the model can consider at one, including the prompt and response
+38
+LLMs: Max Tokens
+39
+Max Tokens specifies the maximum number of tokens that can be generated in one response
+Max Tokens is part of the ContextWindow: 
+Temperature controls the randomness of word choice when generating text
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Mathematically, it scales the probabilities of the next token
+Conceptually, it changes creativity vs. consistency
+LLMs: Temperature
+40
+LLMs: Temperature
+41
+Use of a pre-trained LM
+42
+The three classical strategies for using a pre-trained LM on downstream NLP tasks:
+Fine-tuning
+Feature-based
+Prompting
+Fine-tuning
+43
+Fine-tuning means teaching the pre-trained LM the downstream NLP task
+The training of the pre-trained model is continued on a smaller, task-specific dataset
+
+
+
+
+
+
+
+
+
+
+Requires significant computational resources
+Requires (high quality) domain-specific labeled data
+
+
+Fine-tuning
+44
+For a downstream task (e.g. spam detection):
+Plug in the task-specific inputs and outputs
+Add a simple output layer and its corresponding loss to the pre-trained model
+Fine-tune all the parameters end-to-end for a few epochs
+Feature-based
+45
+Feature-based means using the pre-trained LM as a feature extractor
+Embeddings from the pre-trained model are used as input features for a separate model trained on the downstream task, while the LMs own parameters remain frozen
+Allows a task-specific architecture
+Useful when you have limited resources
+
+Prompting
+46
+Prompting means asking the pre-trained LM to do the downstream task in natural language
+The pre-trained LM is not retrained, but the task is phrased as a prompt or instruction
+The pre-trained LM leverages its broad knowledge to perform the task zero-shot or few-shot 
+Zero-shot: a prompt without examples
+		The model relies entirely on its pretrained knowledge
+Few-shot: the prompt includes a few examples
+		The model infers the pattern from these examples 		This ability is called in-context learning
+
+
+In-context learning‘Few-shot’ learning  no parameter updates
+47
+In addition to the task description, the model sees a few examples of the task:
+
+48
+
+New strategies in the LLM era 
+49
+New strategies in the LLM era 
+50
+51
+Retrieval Augmented Generation
+RAG
+
+		
+
+
+
+
+
+Why do we need RAG?
+52
+LLMs have three major limitations that RAG helps solve:
+
+LIMITATIONS
+
+Knowledge cutoff
+
+Hallucinations
+
+Domain specificity
+
+
+DESCRIPTION
+
+LLM only knows data up to its last training date
+
+LLMS makes up facts confidently
+
+LLM might not have specialized company or domain knowledge
+RAG SOLUTIONRetrieves up-to-date info from external sourcesGrounds LLM responses in retrieved, factual text
+
+Allows retrieval from internal documents, manuals, papers, etc.
+LLMs come with challenges
+53
+Hallucinations occur when an LLM produces text that is incorrect or made up but sounds convincing
+They result from the model’s reliance on learned language patterns, not factual knowledge
+LLMs are trained to predicts what looks plausible, not what is true
+What is RAG?
+54
+RAG (Retrieval-Augmented Generation) is a method that combines:
+An LLM which generates natural-language responses
+A retrieval system which searches for relevant, factual information
+RAG is a combination of an LLM and external knowledge search in order to ground responses in retrieved, factual information instead of relying only on memory
+
+RAG lets LLMs “read before they write”
+
+When do we need RAG?
+55
+RAG is used whenever:
+The task requires factual accuracy or real-world knowledge
+The needed information is not in the model’s parameters
+You want to avoid retraining or fine-tuning a large model
+
+RAG Pipeline: ’10,000-foot view’
+56
+RAG = augmenting the query by adding custom / domain knowledge
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Step 1-3: Retrieval
+Step 4-6: Augmented generation
+RAG Pipeline: ‘Helicopter View’
+57
+RAG Pipeline: Ground-Level view(out-of-scope for this course – active research domain)
+58
+Data Orchestration Framework: LlamaIndex
+59
+
+RAG: Challenges and Limitations
+60
+C
+
+CHALLENGES
+
+Context overflow
+
+Retrieval noise
+
+Embedding drift
+
+Citation correctness
+
+Latency & cost
+
+Evaluation difficulty
+DESCRIPTION
+
+Retrieved context exceedingLLM’s window
+Misleading irrelevant chunks
+
+Different embedding models give inconsistent results
+
+Model citing wrong sources
+
+Expensive real-time embedding & retrieval
+
+Hard to measure factuality
+61
+Vector Databases
+
+		
+
+
+
+
+
+Vector Database
+62
+A vector database allows to store and search document embeddings in RAG systems
+They are created by:
+Collecting knowledge sources
+Splitting them into small chunks 
+Using an embedding model to create embeddings for each chunk
+Storing them in a vector database
+Building an index for fast search
+Vector Database
+63
+Stores data as embedding vectors (embedding depends on the LLM model)
+Returns ‘top k’ embedding vectors, most like the query (neighbors)
+Vector Database
+64
+A vector database looks up relevant information through semantic search:
+Instead of relying on exact matches or keyword overlap as in traditional databases, they use vector similarity to find text that means the same thing, not just uses the same words
+It matches the user query embedding with chunk embeddings to retrieve the most relevant chunks
+This allows LLMs to answer questions factually
+
+Compute Similarity & Semantic Search 
+65
+Common VectorDBs
+66
+67
+Model Context Protocol
+MCP
+
+		
+
+
+
+
+
+Model Context Protocol
+68
+Model Context Protocol (MCP) is an open standard by which LLMs or AI agents can access external data sources, tools and services in a uniform way
+MCP defines how an LLM communicates with external systems to retrieve, use, and update context dynamically
+
+MCP Architecture
+69
+
+70
+
+71
+Agentic AI
+CrewAI
+
+		
+
+
+
+
+
+The rise of AI Agents
+72
+Agentic AI
+73
+Agentic AI refers to AI systems or agents (often powered by LLMs) that can perceive, reason, act, remember and plan autonomously to achieve goals
+An AI agent does not just generate text. It:
+Decides what to do next
+Uses tools or external data sources when needed
+Remembers relevant information from past interactions
+Plans multi-step actions towards a goal
+AI Agent: General Components
+74
+An AI agent typically integrates tools, memory and planning:
+AI Agent: Tools
+75
+Tools are the external systems the AI agent can use to gather data or perform actions
+E.g., a search engine, vector database, calculator, calendar, file system, Web API, code executor, email sender, …
+Tools make the agent actionable: it is no longer limited to its pretrained knowledge or text generation
+Tools are usually accessed via MCP servers which expose standardized actions the agent can call
+AI Agent: Memory
+76
+A standard LLM only “sees” what is inside its context window: once the context is too long or the chat ends, earlier information is lost
+To behave like an agent, an LLM needs memory to retain and recall relevant information
+After each interaction or reasoning cycle, the agent saves what it has learned and done in two complementary forms:
+The summary text (or reflection) is passed through an embedding model and stored in a vector database            semantic memory for recall 
+The agent creates a structured record of its state, actions, and results and stores it in a database            structured checkpoint for continuity
+The structured checkpoint is linked to the reflection embedding, connecting the two forms of memory 		
+
+
+
+AI Agent: Memory
+77
+When the agent receives a new query, it embeds the input and retrieves relevant memories:
+It searches the vector database for the most similar embeddings, i.e., past experiences or reflections with related meaning
+It fetches the corresponding checkpoints to inspect what it did, why, and how it turned out
+Retrieved memories are reinserted into the prompt, giving the model:
+A sense of continuity across interactions
+The ability to handle long-running tasks
+Mechanisms for recovery from failure and self-improvement
+AI Agent: Planning
+78
+Implicit planning occurs when the agent reasons and plans within a single prompt, such as through chain-of-thought reasoning
+There is explicit planning where the agent:
+Decomposes a complex goal task into smaller steps
+Decides which tools to use and in what order
+Explicit planning is dynamic: the agent can revise or refine its plan after each step based on success, failure, or new information
+Planning gives an AI agent autonomy
+79
+80
+Multi-Agent Systems
+81
+A multi-agent system (MAS) is a group of autonomous AI agents that collaborate to achieve complex goals
+This mirrors real-world workflows and enables division of labor
+Each agent has its own role, knowledge, tools, and reasoning, and they communicate to share results
+MAS provide specialization, scalability, and parallelism, overcoming the limits of single-agent LLMs
+
+
+
+Popular Agentic AI frameworks
+82
+Focus of this course
+
+CrewAI: Concept
+83
+CrewAI:Crew, Agent, Task, Tools, Process
+84
+
+85
+
+https://docs.crewai.com/ 
+86
+CrewAI: Agent
+87
+‘Old way’: 	agents.py file
+‘New way’:	/config/agents.yaml 
+88
+Define Tasks 
+In tasks.py
+Or, in config/tasks.yaml
+CrewAI: Task
+CrewAI: Crew
+89
+Default process: sequential
+90
+CrewAI Agent:Chain-of-Thought & ReAct (Reasoning & Acting)
+CrewAI: Tools & Integrations
+91
+Commonly used tools:
+
+Web search (Serper API), Groq API, YouTube and Media Connectors, Database connectors (SQLAlchemy, PyMongo), Langchain tools, AI Powered tools (DallE API), SeleniumWeb Scraping, LLamaIndex, Slack API, etc.
+
+
+
+CrewAI: Process/Planning
+92
+CrewAI: Memory (Short- & Long-term)
+93
+CrewAI: Putting it all together
+94
+95
+
+96
+NLP Challenge
+Personal Learning Assistant
+		
+
+
+
+
+
+Personal Learning Assistant
+97
+Platform
+Use CrewAI, LangGraph, … to build a multi-agent personal learning assistant
+
+Goal (MVP)
+The assistant responds to user questions through a chat interface
+Demonstrate multi-agent collaboration (at least two interacting agents)
+Integrate at least one MCP tool (e.g., RAG search, web API, or document retriever)
+Maintain short-term context continuity within a conversation
+Produce useful educational outputs (e.g., summaries, explanations, or quizzes)
+
+Possible Extra’s / Extensions / Extra credit
+Experiment with additional tools or agent roles for richer collaboration
+Add long-term memory using a vector database for persistent recall
+Implement adaptive behavior where agents reflect and improve over time
+Over to you
+98

@@ -1,0 +1,293 @@
+Chapter 3 – Model quality
+Artificial Intelligence
+Model types
+When doing machine learning, there are two types of model:
+
+Classification
+Student will pass/fail (binary)
+Weather will be bad/fine/good/very good
+Regression
+Student will have 72%
+Temperature will be 25°
+
+2
+Types of machine learning
+3
+Model quality
+You’ve made a model, but now you need to test how good the model is
+Before training, hold back some data that the model won’t get to ‘see’
+Train, test, validation (see next slide)
+Let the model predict this data and compare the results with what you know should be the outcome
+Regression:
+RMSE
+Classification:
+Confusion matrix
+4
+Train, test, validation
+You split your data in three parts. The exact percentages differ, but training is the biggest (70%-80%), and the remainder is divided equally between validation and test.
+Data should be divided using the same probability distributions.
+(Don’t take the top X rows from a sorted dataset.)
+Sometimes you only use a training and a test-set:
+Train the model and test it once
+When you can adjust parameters on the model, you need a validation-set
+Train model using param X, validate, set param Y, train again, validate, …
+Finally test the final model using the (until then unseen) test-set
+More on this in the next chapter
+5
+Regression model quality
+When doing regression, assessing model quality is quite easy with the RMSE
+It’s a measure for how far the predicted values where from the actual value
+Lower is better
+RMSE already penalizes large errors and the unit is the same as the actual data
+When predicting temperature the unit of the RMSE will also be “degrees”, not “degrees²”
+There are alternatives
+MAE (Mean Absolute Error) – more robust to outliers
+R² (Coefficient of Determination) – measures proportion of variance explained
+
+6
+Classification model: Cat or not cat?
+This powerpoint uses the very bad “is it a cat or not a cat”-model
+This is a bad model for 2 reasons:
+Cat or not cat is a deep learning model, where we are working with machine learning. The results of a machine learning model are the same though, but less graphical (a fraudulent transaction is nowhere near as cute as a cat).
+The model is awful. Any script-kiddy copying from youtube can make a better cat-dog model. The reason we work with such a bad model is because that makes it easier to align the results with the model. (0,9987 is less than 0,99978, but it easier to see the difference between 0,18 and 0,64)
+7
+Classification model quality
+A confusion matrix shows the number…
+Of predicted cats that where cats
+Of predicted cats that where not cats
+Of predicted not cats that where cats
+Of predicted not cats that where not cats
+Which gives you a lot of information, but what is better?
+A model that predicts to many cats
+A model that predicts to many not cats
+
+
+
+
+8
+Confusion matrix
+A very simple confusion matrix for a binary classifier
+With examples:
+9
+True positive (TP) Predicted a cat and it was a cat
+False positive (FP) Predicted not a cat and it was a cat
+False negative (FN) Predicted a cat and it was not a cat
+True negative (TN) Predicted not a cat and it was not a cat
+Confusion matrix
+A confusion matrix sounds easy, but which of the above is the better model?
+Left model got 92 images wrong, the one on the right only 81.
+The one on the right also labels a lot of images as cats. Is that a problem?
+The solution: you do calculations using TP, TN, FP and FN and compare these numbers
+10
+Sensitivity (recall)
+Sensitivity measures the proportion of actual positive instances that are correctly identified by the model.
+High sensitivity: model is good at identifying positive instances
+Example: in a medical setting low FN is important as it’s better to
+have received treatment for an illness you don’t have
+than to not have treatment for an illness you do have.
+11
+Sensitivity (recall)
+Left: 0.608, right: 0.841
+Right is higher. It has more correctly identified cats.
+Right also called a lot of stuff that wasn’t a cat a cat, but sensitivity doesn’t take that into account.
+We prefer a false alarm (FP) over a missed case (FN)
+12
+Cat or rat?
+You find a lovely animal in an alley, but only want to keep it if it’s a cat (not when it’s a rat)
+The good scenarios:
+TP: It’s a cat and you keep it
+TN: It’s not a cat and it’s exterminated
+The bad scenarios:
+FP: It’s not a cat and you keep it(can be undone at a later date)
+FN: It’s a cat but it’s exterminated(can’t be undone, should be avoided)
+13
+Specificity
+True negative rate, the opposite of sensitivity
+High specificity: model is good at finding negative instances
+A false positive (saying the patient has cancer when they don’t) could lead to unnecessary treatment, which might be invasive or harmful.
+So:
+You want to be sure someone truly has the disease before taking drastic action.
+It’s better to miss a few real cases than to wrongly treat healthy people.
+
+14
+Specificity
+Left: 0.646, right: 0.185
+Left is higher. It has less wrongfully identified cats.
+Left also missed a lot of actual cats (FN, 69) but was better at finding the actual not cats (42 vs 12 on the right).
+We prefer a missed case (FN) over a false alarm (FP) 
+15
+Good or bad snake?
+You find a lovely snake in an alley, but only want to keep it if it’s safe (not poisonous)
+The good scenarios:
+TP: It’s safe and you keep it
+TN: It’s poisonous and it’s exterminated
+The bad scenarios:
+FP: It’s poisonous and you keep it(you die)
+FN: It’s safe but it’s exterminated(a pity, but you live to see another day)
+16
+Multiclass classification
+We’ve been calculating sensitivity and specificity for binary classification
+That implied that there is one Positive and one Negative
+But when doing multiclass, the “FN” for one label is the “FP” for another
+2 solutions:
+Macro average
+Micro average
+17
+Multiclass classification
+Macro average: Calculate sensitivity for each class independently and then take the average.
+(Sensitivity for A + Sensitivity for B + Sensitivity for C) / 3
+
+Micro average: Treat all classes as if they belong to one combined class, counting total true positives and false negatives across all classes.
+(Total TP for A + Total TP for B + Total TP for C) / (Total TP + Total FN all labels)
+18
+Macro average
+Best when all classes matter equally
+Effect: Treats each class equally, regardless of how often it occurs.
+Use macro average when:
+You care about how well the model performs on each class, regardless of frequency.
+Class balance is skewed, and you don’t want dominant classes to overshadow rare ones.
+You’re evaluating a model for fairness or medical/diagnostic applications, where sensitivity on rare classes is crucial.
+But can be harsh if your model is doing well on frequent classes but poorly on rare ones—it penalizes uneven performance.
+
+19
+Micro average
+Best when you care about overall performance
+Effect: Heavily influenced by frequent (common) classes.
+Use micro average when:
+Your classes are balanced in frequency.
+You want to evaluate the model's global performance across all predictions.
+You care more about individual prediction correctness than about per-class behavior.
+But: rare classes get ignored—their poor performance is "diluted" by the good performance on frequent labels.
+20
+Macro vs Micro
+Suppose:
+Class A occurs in 90% of samples.
+Class B in 50%.
+Class C in 2%.
+Your model:
+Does great on A and B.
+Fails on C.
+Then:
+Micro average will still be high (weighted by A and B)
+Macro average will drop significantly (C drags it down)
+21
+Thresholds
+Basic models (decision trees, random forests, …) return a binary classifier. More advanced models (XGBoost, linear learner, …) tend to give a probability
+Example:
+
+
+You may state an animal is a cat if the probability of “cat” is higher than all other animals. But what if we upload a bus “cat” is 0,00021% and “dog” is 0,00018%?
+Changing the thresholds is an easy way of changing sensitivity and specificity. Could we make a graph of the different settings to choose the best one?
+22
+ROC
+A receiver operating characteristic (ROC) graph summarizes all the confusion matrices that each threshold produced. To build one, you calculate the sensitivity (or true-positive rate) against the false-positive rate for each threshold value.
+(0,0): Everything is a cat
+(1,1): Everything is not a cat
+(0,1): Best possible model
+(1,0): Worst possible model
+Line from (0,0) to (1,1): random classifier
+
+
+
+
+23
+Best model, wrong labels!
+24
+ROC
+The ROC helps tuning the model to the use case
+False positives are a major issue?
+False negatives are a major issue?
+You need a well balanced model?
+An ROC does show if a model is better if it’s further away from the diagonal
+The diagonal is a random classifier: wrong as much as it is right
+
+The ROC does not help tuning the model, as it doesn’t require retraining!
+
+ROC
+The ROC does not help tuning the model, as it doesn’t require retraining!
+
+You’ve made a model, and it outputs a percentage
+98% sure it’s a cat or only 65% sure it’s a cat, not true/false
+Changing where you are in the ROC comes down to asking	“How sure do I need the model to be before I believe it?”
+
+You’re not retraining the model, changing parameters or type of model
+But suppose you have made a couple of different models, can ROC help comparing them?
+
+25
+AUC-ROC
+Suppose you have a new dataset and created some ROC-curves for different models. What easy way is there to see which is the better model?
+Measure the area under the curve! Bigger means further from diagonal, means better.
+A percentage of 100% would be an ROC-curve that fills the entire surface, a perfect model.
+A percentage of 50% would be an ROC-curve that exactly follows the diagonal, which is the worst model possible (a random estimator).
+A percentage of 0% would be another perfect model with bad labeling.
+26
+AUC-ROC
+ROC-AUC is particularly useful in:
+Comparing different models without having to select a specific threshold
+Applications where the optimal threshold might change over time
+Scenarios where different operating conditions might require different precision-recall trade-offs
+However, ROC curves can be overly optimistic with highly imbalanced datasets, where the precision-recall curve often provides a more informative view
+
+27
+Metrics
+We started with sensitivity and specificity
+… and put these two in a graph (the ROC)
+Then we calculated a number based on this graph (the AUC)
+
+Quite enough on the metrics, I say!
+28
+Precision-Recall Curve
+the Precision-Recall curve plots precision against recall at various classification thresholds
+The area under the precision-recall curve provides a summary of model performance focused on the positive class
+Working with highly imbalanced datasets where the positive class is rare but important
+The negative class is large and less interesting than the positive class
+You want to focus on the trade-off between precision and recall specifically
+
+29
+Accuracy
+Use when:
+Classes are balanced (e.g., spam vs. not spam, with roughly equal numbers).
+False positives and false negatives carry similar costs.
+Avoid when:
+Classes are imbalanced. E.g., in medical diagnosis where 99% of patients are healthy, a model that always predicts “healthy” has 99% accuracy but is useless.
+
+30
+Precision
+Use when:
+The cost of false positives is high.
+You want to be very confident in positive predictions.
+Examples:
+Email spam detection: You don’t want to wrongly send a real email to spam.
+Fraud detection: You don’t want to block legitimate transactions unnecessarily.
+Remember:
+31
+F1-score
+Use when:
+Classes are imbalanced.
+You need a balance between precision and recall.
+There’s no clear preference for minimizing FP vs FN.
+Examples:
+Medical diagnostics (especially early-stage conditions).
+Information retrieval (e.g., search engines).
+32
+Summary
+33
+Regression
+Repeating: all these metrics only work when doing classification
+“Is it going to be good or bad weather?”
+“Can I win the tour de Flanders for amateurs?”
+“How many years would it take for this student to graduate?”
+When doing regression…
+“What will the temperature be?”
+“Which position could I get in the tour de Flanders for amateurs?”
+“What are the odds of this student graduating in three years?”
+Use RMSE
+
+34
+Back to work!
+Exercises 1, 2 and 3
+We’ll be creating a lot of models without having looked at how they work. For now use them as a black box and interpret the results.
+As it should be done, we also start with data exploration. Never skip that step.
+Next, we’ll install PyCaret (which is tricky)
+PyCaret will be the stepping stone to the next chapter and a great closure for this chapter that concerned the metrics of a model.
+35

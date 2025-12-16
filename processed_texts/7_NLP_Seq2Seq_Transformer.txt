@@ -1,0 +1,531 @@
+NLP Demos (TBC…)
+1
+2
+Tokenization & Vectorization
+3
+4
+Distributional hypothesis
+Word2Vec
+5
+RNN vs LSTM
+6
+RNN challenges: long term dependency & vanishing gradients 
+
+LSTM solution: add long-term memory connection 
+LSTM: Limitations
+7
+Sequential processing: Must read tokens one by one which is slow 
+Long-distance dependencies: Memory fades with distance, even with gates
+
+Limited context window: Only remembers part of long text  
+Fixed-size hidden and cell state: One vector must store all past info 
+
+Memory, parallelization and long-range dependency problems
+RNN/LSTM vs. Transformer
+8
+Paradigm Shifts in NLP
+9
+10
+Deep Learning
+Natural Language Processing (NLP)
+Seq2Seq – Attention - Transformer architecture
+
+
+
+Lesson Goals
+11
+Seq2Seq Models: Students can describe how encoder–decoder architectures convert one sequence into another, explain the role of fixed-length context vectors, identify the limitations of vanilla Seq2Seq models, and motivate the need for attention mechanisms.
+Attention Mechanisms: Students can explain how attention allows models to focus on relevant parts of the input, the difference between self-attention and cross-attention, and how attention overcomes the information bottleneck in seq2seq models.
+Transformer Architecture: Students can explain how the Transformer replaces recurrence with multi-head self-attention and feedforward layers, understand the structure of encoder and decoder blocks, and explain why this design enables highly parallel, scalable sequence modeling.
+LLMs: Students will understand how Transformers become LLMs through large-scale self-supervised pretraining, explain the differences between encoder-only, decoder-only, and encoder–decoder architectures, and describe the various transfer learning techniques used to adapt LLMs to downstream tasks.
+12
+From LMs to seq2seq models
+		
+
+
+
+Seq2seq modelling
+13
+Language models are next token predictors: they take a sequence and predict the next token in the same sequence
+But many NLP tasks require someting else:
+	Translation: 			“Hello world” → “Hallo wereld”
+	Summarization: 		A long article → A short summary
+	Question answering: 	Question → Answer
+	Dialogue: 			Turn → Response
+
+For these NLP tasks, we require models that transform one sequence into another sequence, that is, perform sequence-to-sequence (seq2seq) prediction
+Seq2seq modelling
+14
+Example: translation
+
+
+DEEP NEURAL NETWORK
+
+
+
+
+
+DEEP NEURAL NETWORK
+
+
+
+The black cat drank milk .
+Le chat noir a bu du lait .
+Output sequence
+Input sequence
+
+
+
+
+15
+Seq2seqEncoder-decoder architecture and attention
+
+		
+
+
+
+Seq2seq: Encoder-Decoder architecture
+16
+An RNN/LSTM processes a sequence step by step, and at each timestep its hidden (and cell) states capture context and meaning
+At the end of a sequence, the final state is a summary of that sequence
+Core insight:	If an RNN can encode meaning into a hidden state, we can use that 	encoded meaning to generate a different sequence
+A seq2seq model uses one RNN to encode the meaning of the input sequence and a second RNN to decode this meaning representation into an output sequence
+
+
+Seq2seq: Encoder-Decoder architecture
+17
+Seq2seq: Encoder-Decoder architecture
+18
+The encoder creates a meaning representation of the input sequence through the final hidden state which is called the context vector
+The decoder uses the context vector as the initial decoder hidden state and a special start token to generate the target sequence
+
+
+Seq2seq: RNN Encoder & RNN Decoder
+19
+Seq2seq: RNN Encoder & RNN Decoder
+20
+Seq2seq: From RNN to BRNN Encoder
+21
+A standard RNN encoder processes the input left to right, updating its hidden state at each timestep
+This causes the final hidden state to represent later words more strongly, while early words are partially forgotten
+To balance this, we use two RNNs: one reads the sequence forward, the other backward
+Both RNNs learn the same kind of computation but operate in opposite directions with separate parameters
+The result is a Bidirectional RNN encoder
+By concatenating the final hidden states of the forward and backward RNNs, we obtain a context vector that captures both past and future context
+Seq2seq: From RNN to BRNN Encoder
+22
+
+
+Seq2seq: Bottleneck
+23
+The final hidden state of the encoder tries to compress the whole input sentence into one fixed-length context vector
+When dealing with long sentences we lose information resulting in an information bottleneck
+Seq2Seq: Attention
+24
+How do humans translate a source sentence into a target sentence? 
+By focusing on the specific word (or words) they are translating at each moment
+
+Seq2seq: Attention
+25
+To fix the information bottleneck in seq2seq, we drew inspiration from human attention
+Humans focus on the specific word they are translating at each moment
+Attention means selectively concentrating on key information while ignoring the rest
+In seq2seq with attention, the decoder can look at all encoder hidden states at every timestep
+The model learns an attention distribution that indicates how strongly to focus on each input token
+Seq2seq: Attention
+26
+Seq2seq: Attention
+27
+Without attention: the decoder receives only the final encoder hidden state as the context vector
+This compresses all input information into one fixed-length context vector resulting in an information bottleneck
+
+With attention: the decoder has access to all encoder hidden states
+At each timestep, it computes a new context vector focused on the most relevant parts of the input
+This allows dynamic, flexible use of input information and improves performance on long or complex sequences
+
+Seq2seq: Attention learns alignment between words of different sequences 
+28
+Seq2seq: Limitations
+29
+Sequential processing: Must read tokens one by one, making training and inference slow and impossible to parallelize
+Long-distance dependencies: Even with attention, the encoder’s hidden states weaken over long sequences, limiting the model’s ability to capture long-range relationships
+
+Limited context window: each encoder hidden state represents only a small, local portion of the input so information from earlier parts of long sequences becomes weakened
+Attention computation: Requires comparing each decoder step to all encoder states which becomes costly for long sequences
+
+30
+TransformersThe power of self-attention
+
+		
+
+
+
+From Seq2seq with Attention to Transformers
+31
+Seq2seq with attention greatly improved translation and other seq2seq tasks by allowing the decoder to focus on relevant parts of the input
+However, these models still rely on RNNs, which process tokens sequentially, struggle with very long inputs, and cannot be efficiently parallelized
+Attention introduced a powerful idea: directly linking any target token to any source token, which proved far more powerful than the recurrent structure around it
+The transformer architecture takes this insight further by removing recurrence entirely and relying solely on attention mechanisms
+This shift enables parallel processing, better long-range modeling, and significantly larger models, laying the foundation for modern LLMs
+
+32
+Self-attention allows each token in asequence to look at all other tokensin the same sequence to decide whichones are most relevant for understandingits meaning
+Instead of passing information stepby step like in an LSTM, self-attention connects every token directly to everyother token in a single operation
+
+Self-Attention
+33
+Each token asks: “Which other words matter to me?”
+It assigns attention weights (higher for more relevant words)
+The token’s new embedding becomes a weighted combination of all the words it attends to
+Each token’s new embedding now encodes both syntactic and semantic relations
+
+
+Self-Attention
+34
+
+Multi-Head Self-Attention
+A single self-attention operation can capture only one type of relationship between words
+To learn multiple complementary relationships the model applies self-attention multiple times in parallel
+Each parallel attention operation is called a head, and together they form multi-head self-attention, allowing the model to look at the input from different perspectives at once
+
+35
+Multi-head self-attention is applied across many layers of a transformer, with each head and layer capturing different aspects of language
+Lower layers: 	Learn local linguistic features such as basic morphology and 			part-of-speech cues
+Middle layers: 	Integrate information from multiple heads to capture			syntactic structures, phrase boundaries, and short-range			dependencies
+Higher layers:	Learn global, abstract features, including context-dependent 			word meaning, long-range relationships, and semantic or			conceptual patterns
+This layered, multi-head architecture allows to build a hierarchical understanding of language
+Multi-Head Self-Attention
+Transformer ArchitectureEncoder-Decoder model, multiple layers
+36
+A Transformer is an encoder–decoder architecturebuilt from multi-head attention layers and feedforward layers
+Transformer ArchitectureEncoder-Decoder model, multiple layers
+37
+The inputs are the embeddings of the tokens in the source sequence
+The outputs are the embeddings of the generated tokens in the target sequence, obtained by sampling from the output probability distribution at each decoding step
+To keep information about the sequence order, this information is added to the token embeddings through positional encoding
+
+38
+
+
+Transformer ArchitectureInput and output embeddings
+The encoder consists of multiple encoder blocks. Each block consists of multi-head self-attention layers followed by add and norm layer, and feed forward layers followed by add and norm layer
+
+The encoder takes the input sequence and outputs contextualized input word representations
+
+39
+Transformer ArchitectureEncoder
+40
+Every token embedding is transformed into three embeddings:
+Query: represents what information thisword is looking for 
+Key: represents what information thisword contains
+Value: represents the actual content thatis passed to other words when theyattend to it
+
+Self-attentionQuery, Key and Value
+41
+Every token embedding is transformed into three embeddings:
+Query: represents what information this word is looking for 
+Key: represents what information this word containsValue: represents the actual content that is passed to other words when they attend to it
+
+First, sentence X (e.g., black cat or she eats) is projected to Query space, Key space and Value space
+Next, all words compute their own contextualized  representations simultaneously by multiplications
+Self-attentionQuery, Key and Value
+42
+Self-attentionQuery, Key and Value
+43
+Multi-head Self-attentionQuery, Key and Value
+The decoder also consists of multiple decoder blocks. Each decoder block is similar to the encoder block but uses masked self-attention and an extra attention step where it calculates cross-attention between the encoder tokens (i.e., the output of the final encoder block) and already predicted decoder tokens
+
+The decoder generates the target sequence token by token conditioned on the previously generated tokens and the tokens in the source sequence
+
+44
+Transformer ArchitectureDecoder
+AttentionSelf-Attention versus Encoder-Decoder Attention
+45
+Self-attention is a mechanism in which a token attends to all other tokens in the same sequence to learn contextual relationships (representation learning)
+In the encoder, self-attention learns relationships between source tokens, producing contextualized input representations
+In the decoder, self-attention learns relationships between previously generated target tokens, but it is masked to prevent the model from seeing future tokens, ensuring the decoder generates text left-to-right
+AttentionSelf-Attention versus Encoder-Decoder Attention
+46
+Encoder-decoder attention or cross-attention is a mechanism used only in the decoder, where each target token attends to the encoder’s output representations
+This allows the decoder to focus on the most relevant parts of the source sequence when predicting each target word, enabling the model to learn the mapping from input to output (task learning)
+At each step, the decoder predicts the most likely next word of the output sequence by outputting a probability distribution over the tokens in the vocabulary and sampling from this distribution
+
+47
+Transformer ArchitectureOutput
+
+48
+
+
+49
+
+Skip connections are used to obtain a good balance between learning new information and remembering old information 
+They are necessary to properly train deep neural architectures
+
+
+
+
+
+50
+Transformer ArchitectureSkip connections
+Detailed breakdown:https://bbycroft.net/llm
+51
+
+Transformer for Machine Translation
+52
+Transformer is an encoder-decoder architecture for seq2seq tasks that no longer uses recurrent layers
+The encoder and decoder only use attention and feedforward layers:
+Self-attention operates between source tokens (in the encoder) or between target tokens (in the decoder) to capture context and meaning for representation learning
+Feedforward layers process each token’s updated representation independently, applying linear transformations and non-linear activations to refine and update its meaning using the model’s learned general linguistic knowledge
+Cross-attention operates between each target token and all source tokens to align input and output sequences for task learning
+
+Has accelerated the field of natural language processing in tackling human language since 2017
+Transformer Architecture: Summary
+53
+54
+From the Original Transformer to Modern LLMs
+
+		
+
+
+
+55
+The original Transformer was built for seq2seq tasks (like translation), using an encoder–decoder structure with self-attention and cross-attention
+However not all NLP tasks require both components, leading to three main architectural variants
+Transformer LLMsThree different types
+LLMs: Encoder – Decoder Models
+56
+Use both an encoder and decoder
+Designed for tasks that transform one sequence into anothersuch as translation, summarization, paraphrasing, and instruction following
+Are widely used for seq2seq tasks and certain instruction-tunedLLMs
+Encoder – Decoder Models
+57
+58
+Encoder-only transformers use only the encoderwith full self-attention
+Produce strong contextualized embeddings
+Are suited for language understanding tasks
+LLMs: Encoder-Only Models
+Encoder-Only: BERTBidirectional Encoder Representations from Transformers (Google, 2018)
+
+59
+Encoder-Only: BERTInput
+
+60
+In BERT, the CLS token is a special symbol added at the beginning of the input sequence whose final hidden representation serves as a summary of the entire sentence for tasks like classification
+Encoder-Only: BERTTwo training objectives
+
+61
+62
+Decoder-only transformers use only the decoder withmasked-self attention
+They generate tokens from left-to-right
+Are suited for next-token prediction, text generation and large-scale autoregressive language modeling
+Form the foundation of most modern LLMs
+LLMs: Decoder-Only Models
+Decoder-Only: GPT-3Generative Pretrained Transformer (OpenAI, 2020)
+
+63
+96 transformer decoding layers
+12 288 dimensions in hidden layers 
+96 self-attention heads
+175 B parameters
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    1	       	2	       …		  2048
+Decoder-Only: GPT-3Input
+64
+
+
+
+
+
+
+Decoder-Only: GPT-3Next word prediction
+65
+66
+Transformer LLMsThree different types
+67
+Transformer LLMsThree different types
+68
+(Pre-) Training an LLMSelf-Supervised training
+69
+	Autoregressive language modeling (next word) 	     	Masked language modeling (mask)
+In LLMs, self-supervised learning means the model learns from raw text by predicting missing or next tokens without needing labeled data, enabling training on massive corpora at scale.
+Training set
+70
+GPT-3 was trained on a vast mixture of internet text totaling hundreds of billions of tokens, which if read by a human would take on the order of tens of thousands of hours, far longer than a lifetime’s reading
+Pre-trained NLP Language Models are HUGE!  LLM (Large Language Models)
+71
+
+LLMs learn a broad set of linguistic patterns during pretraining (meta learning), and this general knowledge can be reused through transfer learning for new, unseen tasks
+Given the right prompt LLMs show excellent zero-shot and few-shot performance for a variety of language tasks
+Zero-shot: a prompt without examples		 The model relies entirely on its pretrained knowledge
+Few-shot: the prompt includes a few examples		The model infers the pattern from these examples 		This ability is called in-context learning
+LLMs: Meta Learning & Transfer Learning
+72
+Pre-training vs Fine-Tuning vs In-Context Learning
+73
+Instruction Tuning
+74
+Instruction tuning can be seen as automated prompt training
+
+The model is fine-tuned on many examples of instructions and ideal responses
+The model learns to follow natural-language prompts or instructions naturally rather than just predict text
+Encourages generalization across tasks where the model learns how to follow instructions it has never seen before
+
+
+Instruction Tuning
+75
+Reinforcement Learning from Human Feedback (RLHF)
+76
+Adds a human feedback loop on top of the fine-tuned or instruction-tuned model
+Humans rank multiple model responses to the same prompt and we build a reward model of preferred answers
+The base LLM is then optimized via reinforcement learning to maximize this reward
+Aligns model behavior with human values, helpfulness, and safety expectations
+
+77
+Reinforcement Learning from Human Feedback (RLHF)
+LLMs: Context-dependent Embeddings
+78
+LLMs start with a token embedding layer, which maps discrete tokens (via one-hot encoding) to continuous vectors
+As the input passes through each transformer layer, these embeddings are refined and contextualized through self-attention and feedforward layers
+Each layer captures different linguistic or semantic properties:
+Lower layers tend to represent surface features such as syntax, word form, and local context
+Middle layers capture semantic relationships and word meaning in context
+Higher layers model abstract reasoning, long-range dependencies and task-specific knowledge
+Because of this, embeddings can be extracted from different layers 
+
+79
+
+Powered by
+LLM
+Transformer LLMs solve LSTM Limitations
+80
+Memory Bottleneck → Distributed Attention
+LSTMs store all context in a single memory (the hidden state and cell state)
+Transformers use attention weights to distribute memory across all tokens 
+Long-Term Dependencies → Global Context
+LSTMs fade over long distances, even with gates
+Self-attention links every word to every other word, regardless of distance
+Sequential Processing → Parallel Computation
+LSTMs process one word at a time which is slow and unscalable
+Transformers process all tokens simultaneously enabling massive parallelization
+Limited Expressiveness → Feedforward Layers
+Self-attention + feedforward layers allow nonlinear transformations and richer feature combinations
+
+
+LLMs: Strengths
+81
+Scalability
+Pre-training on large amount of unannotated text data
+Transfer learning requires little labeled data
+Language understanding
+Meta learning
+Zero-shot and few-shot learning
+Contextual understanding
+General world knowledge
+Multilingual capability
+Accessibility
+Ease of use via prompting
+Low setup cost for applications
+Automation and Efficiency
+Automates repetitive tasks for enhanced productivity
+Rapid prototyping
+
+LLMs: Weaknesses
+82
+Knowledge
+Outdated knowledge
+Factual inaccuracies or ‘hallucinations’ due to lack of understanding
+Lack of true understanding
+Lack of domain specificity
+Poor uncertainty quantification
+Inability to verify or learn from feedback
+Reasoning and logical consistency
+Sensitivity to input prompt
+Struggles with complex multi-step reasoning, mathematical problems or abstract logic
+May produce contradictory responses in a single session
+Lack of true causal reasoning
+
+Contextual understanding
+Limited memory
+No persistent understanding across sessions
+
+LLMs: Weaknesses
+83
+Bias and ethical concerns
+Encodes social biases present in training corpus
+Co-occurrence bias
+Can generate harmful, offensive or misleading content
+Misuse potential
+Accessibility and computational concerns
+Demands immense computational resources
+Inaccessible to many researchers and organizations
+Concerns related to energy efficiency and environmental sustainability
+Latency
+
+Lack of interpretability
+Black boxes
+Debugging or explaining responses/decisions is difficult
+Limits transparency and trustworthiness 
+No multimodal capabilities
+84
+Summary
+
+So far:		
+
+Seq2Seq  Transformer  LLMs and Transfer Learning
+
+Next week:
+
+Multimodal Transformers
+
+Over to you
+85

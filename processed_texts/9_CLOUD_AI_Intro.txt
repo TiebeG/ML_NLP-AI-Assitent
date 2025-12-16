@@ -1,0 +1,107 @@
+Machine learning - AWS
+About this part of the course
+Course goals
+Data science: course in 2ITF
+AI: course in 2ITF
+Machine learning: focus of this course(AI on structured data, but we’ll be doing more than just that)
+Deep learning and NLP: the rest of this course
+Cloud
+The cloud is important
+This course uses an AWS-academy course
+You’ll do about half of that course, joined with slides on the ‘regular’ canvas course
+When studying:
+Start from the Thomas More-slides
+Do the AWS-course as by the planning on the next slide
+
+The goal of using AWS is to get to know Sagemaker and S3 buckets
+Cloud
+Do the chapters on AWS after the lessons in class (before the next lesson)
+Make sure you get a passing grade on the end-of-chapter-test
+You can redo the test as often as you like
+Planning:
+Week 1: chapter 1 and 2
+Week 2: chapter 3
+Week 4: chapter 4
+The other chapters are optional
+The content is covered by the other teachers in this course
+Course layout
+6 half days:
+Data science recap, AWS basic, AWS sagemaker
+AWS and machine learning
+MLOps (sagemaker, pipelines, ML Flow), AutoML and PyCaret
+Time series and forecasting
+Unsupervised learning
+Project work
+The project:
+Do AI and advanced data science on an elaborate dataset
+Do time series forecasting on another dataset (pass/fail and excelling)
+Model preparation and hosting
+The exam
+Project deadline: Monday 24-nov-2025, midnight
+Just after the Skil 3 project week. Don’t expect to have a lot of extra time during that week.
+Friday after that: presentations (schedule TBD)
+Present findings, open questions on the method used and the course material
+Grading:
+Project: 20% of final grade
+Retained in August!
+Other projects: 40% of final grade
+Closed book exam: 40% of final grade
+Of which 1/3 are machine learning-related questions
+
+
+AI Assessment Scale – PE 60%
+7
+
+About the slides
+The central guideline in this course
+Refers to AWS-course or other external
+Not numbered per class (week 1 is not necessarily ppt 1)
+Not a good example for your final presentation
+Your final presentation: sell yourself (or your project) to a jury
+These presentations: course material, not selling anything
+Don’t forget the notes, sometimes they contain more information or useful links
+About the slides
+Powerpoint is supercalifragilisticexpialidocious, but it has its limits
+Sometimes the slide will be a link
+To a jupyter notebook with explanations
+To a jupyter notebook with an exercise
+To a markdown-file with explanations
+To the module on AWS
+…
+The slides are the guide between all the other course material,but are not the only course material
+What we’ll be doing
+Modules on AWS
+Contain course material and exercises
+But the exercises are easy (just run the code, sometimes type some code)
+Discussion topics
+Basis for oral part of examination
+Tries to get you to reflect on the course material (AWS and PPT)
+To be discussed in your project-team (Study group!)
+Exercises
+To be done on Sagemaker or locally
+Individual, but may be discussed in your project team
+Not real “exercises,” more guidelines
+Can generally be done in under 10 minutes, but shouldn’t
+The project
+Dataset 1: UK housing
+Housing prices in the England/Wales between 1995 and 2017
+Download from Kaggle
+Dataset 2: UK Historic Electricity Demand Data
+Electricity demand in England/Wales between 2001 and 2025
+Download from Neso
+Todo:
+Data science: Clean and explore
+Machine learning: Build models, compare them, build better models
+Deploy: Create an interface to use your model
+
+Next up
+Weapons of Math Destruction
+AWS
+Login
+Find the correct course (Machine Learning Foundations, 3790)
+Finish module one (hello world of modules)
+Group
+Make a group (in canvas)
+Create a github repo, invite me
+Do the first discussion topics
+And the Lord spoke, saying, "First shalt thou take out the Holy Pin. Then shalt thou count to three, no more, no less. Three shall be the number thou shalt count, and the number of the counting shall be three. Four shalt thou not count, neither count thou two, excepting that thou then proceed to three. Five is right out.”

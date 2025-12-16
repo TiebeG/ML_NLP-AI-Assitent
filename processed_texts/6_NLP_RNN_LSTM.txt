@@ -1,0 +1,571 @@
+1
+Agentic AI
+2
+Popular Agentic AI frameworks
+3
+Focus of this course
+
+CrewAI:Crew, Agent, Task, Tools, Process
+4
+https://docs.crewai.com/ 
+5
+CrewAI: Agent
+6
+‘Old way’: 	agents.py file
+‘New way’:	/config/agents.yaml 
+7
+Define Tasks 
+In tasks.py
+Or, in config/tasks.yaml
+CrewAI: Task
+CrewAI: Crew
+8
+Default process: sequential
+9
+CrewAI Agent:Chain-of-Thought & ReAct (Reasoning & Acting)
+CrewAI: Tools & Integrations
+10
+Commonly used tools:
+
+Web search (Serper API), Groq API, YouTube and Media Connectors, Database connectors (SQLAlchemy, PyMongo), Langchain tools, AI Powered tools (DallE API), SeleniumWeb Scraping, LLamaIndex, Slack API, etc.
+
+
+
+CrewAI: Process/Planning
+11
+CrewAI: Memory (Short- & Long-term)
+12
+CrewAI: Putting it all together
+13
+14
+Deep Learning
+Natural Language Processing (NLP)
+Word Embeddings – Language Models – RNN – LSTM
+
+
+Lesson Goals
+15
+NLP Preprocessing Pipeline: Students will understand the fundamental preprocessing steps in NLP, including tokenization, token normalization, and vectorization (frequency-based and embedding-based).
+Word Embeddings: Students will examine how distributed representations capture word meaning based on the distributional hypothesis, explain how models like Word2Vec learn such embeddings, and recognize the limitations of static, context-independent representations.
+RNNs: Students can explain the need for, and the use of, Recurrent Neural Networks (RNNs), They will understand how RNNs process sequential data by maintaining hidden states over time, explain how this enables modeling of temporal and linguistic dependencies, and identify key challenges such as vanishing gradients and limited context memory.
+LSTMs: Students will explore how Long Short-Term Memory networks extend RNNs with gating mechanisms that manage information flow, understand how the cell state preserves long-term dependencies, and recognize how this architecture addresses the memory and gradient issues in standard RNNs.
+
+16
+Why NLP?History, challenges and ethics
+
+		
+
+
+
+Why do we need NLP?
+17
+Language is the most natural and powerful way for humans to communicate, reason, and share knowledge
+Without NLP, computers remain blind to the vast majority of human knowledge expressed through words
+NLP aims to achieve both language understanding (comprehending meaning and intent) and language generation (producing coherent, context-aware responses)
+NLP allows for:
+Efficient access to knowledge
+Automation of repetitive language tasks
+Enhanced human–machine interaction
+
+
+The power of language
+18
+19
+Knowing a language means being able to produce an infinite number of sentences never spoken before and to understand sentences never heard before. 
+
+
+Noam Chomsky
+
+Language is hard
+20
+Language is remarkably complex, ambiguous and no two languages express meaning in exactly the same way
+
+Ambiguity
+Context dependence
+Language is hard
+21
+Structural variation
+Morphological richness
+Tokenization differences
+Multilingual complexity
+22
+History of NLP
+23
+Ethics and Bias in NLP
+24
+As NLP systems are deployed widely, their social and ethical implications have become critical
+Ethics in NLP concerns the responsible design, training, and use of NLP systems such as to ensure they benefit society and avoid harm
+Bias refers to systematic unfairness in how models treat or represent individuals or groups, often reflecting biases present in training data
+Ethics and bias are not just technical issues: they are deeply human concerns
+As models grow more capable and more agentic we must ensure they reflect our best human values: fairness, inclusivity, and respect for truth
+Ethical awareness should be integrated into every step of the NLP pipeline, from data collection to deployment
+Gender Bias
+25
+Sources of Bias
+26
+Bias can enter NLP systems through various channels:
+Data bias: Imbalanced or unrepresentative training data
+Model bias: Architecture or training methods that amplify existing patterns
+Label bias: Human annotators’ subjective judgments
+Deployment bias: How systems are used and interpreted in real-world settings
+Recognizing and mitigating these biases is essential for building fair, inclusive, and trustworthy AI
+
+Reducing Bias
+27
+Modern NLP systems attempt to reduce bias through several strategies:
+Data diversification: Including more balanced datasets across gender, culture, and language
+Debiasing techniques: Adjusting embeddings or model weights to reduce biased associations
+Post-processing filters: Detecting and blocking harmful or offensive outputs
+Human feedback loops: Using Reinforcement Learning from Human Feedback (RLHF) to align model behavior with ethical norms
+However, no approach is perfect and biases can still re-emerge in subtle ways
+
+28
+Preprocessing
+Tokenization and vectorization
+
+Classical NLP Pipeline
+29
+Modern NLP PipelineTransformer-based Era
+30
+
+NLP Preprocessing steps
+31
+Preprocessing start
+
+Gather (training) documents into a collection = corpus
+Process all documents into tokens
+Order all tokens by frequency = dictionary
+Select x most frequent tokens = vocab (of size x)
+Encode / vectorize / numericalize all documents into usable tensors
+
+Preprocessing done
+
+NLP Preprocessing steps
+32
+Step2 Vectorize
+
+Step1 Tokenize
+
+TokenizationSplitting text into meaningful chunks
+33
+Many ways to ‘Tokenize’ + language dependent: split by whitespace, by chars, by regex, … ?
+
+
+
+
+
+
+
+
+ Libraries (created with linguistical experts) to the rescue!
+TokenizationToken Normalization
+34
+Stemming, Lemmatization, Stop Word removal, etc.
+TokenizationAdding custom or special tokens / meta data
+35
+Fastai uses spaCy by default (can use other tokenizers as well) – ‘TextDataLoaders’
+Adds some custom optimization/normalization ‘chunks’ 
+By normalizing tokens, some information is lost. These chunks add that information back to the data
+xxbos: beginning of sentence
+xxmaj: capitalize first letter of next word
+xxunk: unkown token, or falls outside of the limits of the vocab
+…
+
+TokenizationSpecial tokens 
+36
+Out of ScopeByte-Pair Encoding
+37
+NLP Preprocessing steps
+38
+Step2 Vectorize
+
+Step1 Tokenize
+
+Preprocessing Goal: Turning text into usable tensors
+39
+What is a ‘usable tensor’? It all depends on the use case!
+
+The level of granularity at which you vectorize can vary:
+Character-level 
+Subword-level (most common)
+Byte-Pair Encoding (BPE)
+Word-level
+Sentence-level
+Document-level
+
+
+
+In one-hot encoding (1-of-N encoding) each word is represented as a vector of N (= size of vocabulary) components with one component activated and the others zeroE.g., vocabulary = (airplane, dog, cat)airplane = [1 0 0]dog = [0 1 0]cat = [0 0 1]
+Provides vectors that are sparse (mostly zeros) and high-dimensional (one dimension per vocabulary term)
+Each dimension has an explicit semantic
+There is no notion of similarity between words
+One-hot encodingWord embedding
+40
+Bag-of-Words (BoW)Sentence or document embedding
+41
+BoW creates a vector for each document, one-hot encoding style
+Entire document is vectorized (as opposed to vectorizing each token and combining them)
+Frequency-based: simple “counting” to represent importance of a token in a document
+
+TF-IDFSentence or document embedding
+42
+Another frequency-based document representation method:
+Term Frequency (TF) = how often a word appears in a document→ Common words in a document get higher scores
+Inverse Document Frequency (IDF) = how rare the word is across all documents in the corpus→ Words that appear in many documents get lower scores
+Each document is represented as a vector of TF-IDF values: one value per word (term) in the vocabulary→ Produces sparse and high-dimensional vectors
+TF-IDFSentence or document embedding
+43
+Review 1: This movie is very scary and long
+Review 2: This movie is not scary and is slow
+Review 3: This movie is spooky and good
+What we want:word similarity in semantic vector space
+44
+45
+The Importance of Context
+The distributional hypothesis
+
+46
+Context is important
+47
+Context to Capture Word Meaning
+48
+Computers cannot understand words as we do, they need numbers
+Embeddings are how we translate language into numbers in such a way that similar meanings get similar vectors
+How can we capture word meaning?
+Meaning in language comes from context
+Words appearing in similar contexts tend to have similar meaningsE.g., “Dog” and “cat” often appear near “pet,” “animal,” “food,” “sleep” 		      “Car” and “truck” appear near “road,” “drive,” “engine”
+By observing these patterns, models can learn semantic relationships without explicit supervision
+
+
+
+
+
+Self-Supervision
+49
+Self-Supervised training = automatically getting output label from inputs
+
+Examples:
+
+Word2Vec:
+
+
+Masked Language modeling (BERT, RoBERTa):
+
+
+Sentence Permutation (BART):
+
+
+Emoji Prediction (DeepMoji):
+
+Representation Learning
+50
+Different architectures operationalize the distributional hypothesis differently to obtain word embeddings in a semantic vector space
+Word2vec, RNN, LSTM, BERT, GPT, …
+Representation learning aims to find a way to represent words, sentences, or documents in a continuous numerical space so that the geometry reflects meaning
+Distances between vectors capture similarity in meaning
+Directions encode relationships
+Clusters represent topics or semantic fields
+Word embeddings emerge naturally during training of language models
+
+51
+Language models
+From word prediction to text generation
+
+Language model
+52
+Language model
+53
+An autoregressive language model performs next word prediction	The cat sat on the ___  →  mat  
+A masked language model performs fill-in-the-blank word prediction
+	The cat ___ on the mat  →  sat
+
+Text generation happens when the model repeats word prediction iteratively feeding each predicted word back into itself as input	The cat sat on the  →  mat and started to purr softly .
+The model generates text by sampling from its predicted probability distribution at each step (optionally controlled by temperature)
+Evolution of Language Models
+54
+55
+Statistical LM
+N-gram models
+
+N-gram LM
+56
+Predicts a word based on the previous N - 1 words
+Unigram (N=1), Bigram (N=2), Trigram (N=3)
+Assumes that the next word depends only on a limited history rather than the entire sentence 
+Probabilities are estimated based on counting, where smoothing is used for unseen sequences
+Limited by fixed context, data sparsity and poor generalization
+Replaced by neural LMs that learn dense, continuous vectors where a word’s meaning is encoded across many dimensions and that capture long-range dependencies
+
+Bigram LM
+57
+Step 1: Get training text corpus
+Step 2: Collect all bigrams
+Step 3: For each word in the vocabulary, count the possible second words 
+Bigram LM
+58
+Step 4: Use counts to generate text
+N-gram LM
+59
+60
+Neural LM
+Word2Vec
+Word2Vec
+61
+The distributional hypothesis says: “words that occur in similar contexts tend to have similar meanings”
+Word2Vec operationalizes this insight using shallow neural networks trained on a simple prediction task that forces the model to discover semantic relationships
+Predict a word, given the surrounding words:(CBOW)
+Predict the surrounding words, given a word:(Skip-gram)
+The context window defines how many words around a target word the model considers as its context during training
+Word2Vec: Context Window
+62
+Word2Vec: CBOW (Continuous BoW)
+63
+Prediction task: Predict a word, given the context
+Combine the representations of the contextwords
+Guess which word in the vocabulary best fitsin the blank
+Learning mechanism:
+Each word starts with a random vector
+Adjusts vectors slightly each timeso that the context words, when combined,are closer to the target word vector
+
+
+Word2Vec: CBOW (Continuous BoW)
+64
+Input layer averages (or sums) one-hot vectorsfor each context word and passes them to thehidden layer
+Hidden layer
+Transforms that huge one-hot vector into adense, continuous representation
+Compression or embedding layer
+Output layer predicts the target word based onthe compressed representation
+
+
+
+
+Word2Vec: Skip-gram
+65
+Prediction task: Predict the context, given a word
+Look at a target word and try to guess the words thatusually appear around it
+Learning mechanism:
+Each word starts with a random vector
+Adjusts vectors slightly each time,so that the target word vector is pulled closerto the context word vectors
+
+Word2Vec: Skip-gram
+66
+Input layer represents the current word asa one-hot vector and passes it to the hidden layer
+Hidden layer
+Transforms that huge one-hot vector into adense, continuous representation
+Compression or embedding layer
+Output layer predicts the context words basedon the compressed representation
+
+Word2Vec: Idea
+67
+CBOW and Skip-gram are shallow networks consisting of three layers
+The hidden layer is smaller than the vocabulary and acts as a compression or embedding layer
+It forces the model to encode each word’s semantic and syntactic properties in a compact vector
+Through training, the weights in the hidden layer are adjusted to make the predictions accurate
+These weights become the final word embeddings where words that occur in similar contexts (e.g., apple and orange) get similar embeddings
+Can be pre-trained on large corpus (transfer learning) and used as a lookup table
+Word2Vec
+68
+Embedding Projectorhttps://projector.tensorflow.org/ 
+69
+Word2Vec: Geometry reflects meaning
+70
+Word2Vec: Multiple degrees of similarity
+71
+
+Dimensionality of Word Embeddings
+72
+Too low-dimensional
+It cannot capture all the subtle syntactic and semantic relationships between words
+Words with distinct meanings might end up too close together
+Too high-dimensional
+The model may overfit or learn redundant patterns
+Computation and memory costs increase sharply
+In practice:
+Classical word embeddings (e.g., Word2Vec, GloVe) often used 100–300 dimensions
+Modern LLMs (e.g., GPT, BERT) use hundreds to thousands of dimensions (e.g., 768, 1024, or more)
+Word2Vec: Not Technically an LM
+73
+Word2Vec is not a full language model, but a representation learning model for words trained using a simplified prediction task
+Predicts context words, not the next word in order
+Learns embeddings, not sequence probabilities
+Has no concept of sentence order or syntax beyond a small window of context
+However, its learned space of word relationships makes it useful for lightweight language modeling tasks, information retrieval, and many downstream NLP tasks
+
+
+Word2Vec: A Static Embedding Model
+74
+Every word in the vocabulary has one fixed vector, no matter where or how it is used
+Word2Vec captures average meaning of the word across all contexts, but not the specificsense in any given sentence
+Cannot handle multiple meanings
+
+
+
+75
+Pre-trained LM
+RNN and LSTM
+
+
+From Word2Vec to RNN
+76
+Word2Vec learns meaningful word embeddings that capture semantic similarity, but …
+Each word has one static embedding 
+There is no sense of word order or sentence structure
+To model language as a sequence, we need architectures that:
+Process words in order
+Remember what came before
+Update their understanding at each step
+This is where Recurrent Neural Networks (RNNs) come in, which add memory to neural language models
+
+
+
+FNN vs. RNN
+77
+An FNN processes each input independently
+It has no memory of what came before
+Each output depends on only the current input
+
+
+
+
+
+
+An RNN processes input step by step
+It maintains a hidden state vector that remembers past context information
+Each output depends on the current input and the previous hidden state
+
+RNNs
+78
+An RNN unit processes text one timestep at a time(one word or token)
+Maintains a hidden state vector that acts as memory
+The hidden state is updated at each timestep,combining the new input with the previous state
+Allows the RNN to remember past context asit reads through a sequence
+Enables the RNN to capture dependenciesacross time linking earlier and later words
+
+RNN: Unfolding in Time
+79
+An RNN is drawn as a loop, but can be unfolded across timesteps to show how it processes sequences
+Each copy of the recurrent unit handles one word (or token)
+All copies share the same weights (U, V, W)
+The hidden state is passed from one timestep to the next, carrying context forward
+
+Training uses Backpropagation Through Time (BPTT) to update shared weights
+
+
+
+80
+RNN as LM: The output
+81
+At each timestep t, an RNN processes one element of a sequence:
+Input: the current word embedding
+Hidden state: the memory summarizing what has been seen so far
+Output: a task-specific representation derived from the hidden state
+If the RNN is used as a LM, the task is next word prediction
+Each output represents the model’s predicted probability distribution over the vocabulary
+At timestep t, the RNN outputs a vector of probabilities for word t+1
+We sample from the output distribution to decide what word comes next
+
+
+82
+RNNs as LM: Hidden State Vector
+83
+The hidden state vector is the RNN’s dynamic internal representation, a compressed memory of everything seen so far
+It captures syntactic, semantic, and contextual features simultaneously
+Each timestep’s hidden state is a context-dependent word embedding
+The final hidden state often serves as a sentence-level embedding
+
+RNN as LM: Training and BPTT
+84
+During training, the loss is computed across all timesteps 
+BPTT is sequential in nature (needs the output of previous layers)
+		 NLP with RNNs takes long to train
+
+SLOW
+RNN as LM: Teacher Forcing
+85
+During training, the model does not sample from its own predictions.Instead, it always receives the true next word from the training data as input for the next timestep
+This stabilizes and speeds up training
+
+RNN: Teacher Forcing
+86
+RNN: Teacher Forcing
+87
+Problems of (plain vanilla) RNNs
+88
+Vanishing Gradient problem
+
+
+
+
+
+
+Short-term memory problem and overwriting of information
+
+Gated Recurrent Unit (GRU)Long Short-Term Memory (LSTM)
+89
+Solving long term dependencies & vanishing gradients:
+Add a (small) trainable network in the feedback loop
+Learns what information is important enough to pass to next layer
+Keeps track of a long-term memory (cell state) next to the short-term memory (hidden state)
+Simple network is based on gates that decide
+What to remember
+What to forget
+What to output
+
+
+RNN vs LSTM
+90
+RNN vs LSTM
+91
+LSTM
+92
+LSTM
+93
+Cell State (Long-Term Memory)
+Main memory of the LSTM
+Carries information across many timesteps with minimal change
+Forget and Input gates decide what to remove or add
+Enables long-term retention and reduces vanishing gradients
+
+Hidden State (Short-Term Memory)
+Derived from the cell state and forms the visible output at each timestep
+Output gate controls how much of the cell state is revealed
+Captures short-term, contextual information
+Each hidden state is a context-dependent word embedding
+
+Stacking LSTMs
+94
+Multiple LSTM layers can be stacked vertically
+Each layer takes the previous layer’s hidden states as input
+Lower layers capture local, syntactic relations
+Higher layers capture global, semantic meaning
+Enables richer, hierarchical understanding of language
+LSTM: Strengths
+95
+Handle sequential data with memory overcoming RNN forgetting
+Learn longer dependencies through gated mechanisms that control the cell state
+Capture hierarchical language structure
+Great for small to medium length sequences
+Still limited for large-scale language modeling
+LSTM: Limitations
+96
+Sequential processing: Must read tokens one by one which is slow 
+Long-distance dependencies: Memory fades with distance, even with gates
+
+Limited context window: Only remembers part of long text  
+Fixed-size hidden and cell state: One vector must store all past info 
+
+Memory, parallelization and long-range dependency problems
+97
+98
+Summary
+
+So far:		
+
+Freq. based models (Bag-of-Words)  Word Embeddings  RNNs  LSTMs 
+
+Next week:
+
+Seq2Seq  Transfer Learning & LLMs Transformer
+
+Over to you
+99
