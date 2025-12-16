@@ -1,0 +1,94 @@
+Introduction to machine learning
+
+Understand the data: data science
+This course directly follows data science in 2itf
+You’ll need all the skills you picked up there:
+Grabbing data
+Importing data
+Creating graphs
+Getting information on data
+All using Python and Pandas
+Recap: Histogram and boxplot
+p50
+p75
+p25
+max
+min
+biggest non-outlier
+smallest non-outlier
+boxplot does not show the mean!
+IQR
+OUTLIERS
+x > p75 + 1.5 * IQR
+OUTLIERSx < p25 – 1.5 * IQR
+1.5 * IQR
+1.5 * IQR
+IQRInter-Quartile Range
+Recap: Mean and median
+mean = average
+median = “middle number”
+mode = “most common value”
+Recap: Exploratory data analysis
+Variation
+How much do values of a same variable change across observations.
+
+		“1-D spread” – single spread
+
+Covariation
+How much do values of different variables change in a related way.
+
+		“2-D spread” – related spread
+
+Recap: Exploring variation
+Categorical variable
+
+
+
+
+
+Continuous variable
+
+Histogram
+Bar plot
+Recap: Exploring covariation
+Categorical/Continuous
+
+
+
+
+
+Categorical/Categorical
+
+
+
+
+
+Continuous/Continuous
+
+
+
+
+
+Frequency polygonGrouped boxplot
+Scatter plot2D histogram
+Two-dimensional grid
+Recap: Covariance and correlation
+Correlation ≈ 1Strong positive relationship
+Correlation ≈ 0
+No relationship
+Correlation ≈ -1
+Strong negative relationship
+Storytelling
+Check out Hans Rosling:
+Let my dataset change your mindset - link
+The best stats you’ve ever seen – link
+How not to be ignorant about the world - link
+
+Recap: Virtual Environments
+Every project you do goes in its own personal virtual environment
+Never in the main environment unless it uses no libraries
+When using git (which you are) only upload requirements.txt, not the venv-folder
+
+In your project:
+One git repo, one requirements.txt (updated)
+One venv per student

@@ -1,0 +1,95 @@
+Chapter 9 – Unsupervised learning
+Artificial Intelligence
+Unsupervised learning
+Finds patterns in data
+Clustering customers by their purchases
+Compressing data using these purchase patterns
+Supervised: predict something
+Will the student pass?
+Is the transaction fraudulent?
+Unsupervised: find patterns without a prediction task in mind
+2
+Unsupervised learning
+What clustering does is best visualized in a 2D-scatterplot
+We as humans can look at this and see 2 distinct groups
+Unsupervised learning allows a model to do the same
+But also in more dimensions, which is where things get difficult for humans
+3
+KMeans
+If we train a Kmeans clustering model on this data, we get the two groups as in this graph
+The blue diamonds are the centerpoints, all datapoints or divided based on their distance to these center points
+We can tell the model how many groups we want it to make
+It will make the most logical grouping based on that number
+4
+Inference
+After training a supervised model you can do inference: apply the model to new, unseen data
+This can also be done with an unsupervised model
+It means that you provide new data to this model and the model decides which category the new data belongs to
+5
+Predicting the Iris-dataset
+The Iris-dataset is a dataset containing the with and length of de sepals and petals of three types of irises
+What happens if we build a cluster on this,telling the model to create 3 groups in the data?
+The model gets category 0 right
+It has difficulty with the other two
+
+6
+Unsupervised?
+But wait!
+We’re predicting the type of iris-flower, and we’re not supposed to be predicting because we are doing unsupervised learning
+So if we didn’t know how many types of irises there were in the dataset, how many groups would we have made?
+For this, inertia can be used
+It’s a measure for how far the datapoints are from the center of the cluster
+Lower is better
+7
+Inertia-plot
+When creating models with more clusters, the inertia is definitely going down
+But the decrease is much bigger in the beginning than it is at the end
+Ideally speaking, you’d take the elbow as the amount of clusters you’ll make
+In this case, that would be about 7
+8
+Elbow
+Scaling
+If you consider these two scatter plots, you’ll find that doing clustering is easier in the bottom one than in the top one
+They show the same data, but in the top graph both axis are scaled equally
+KMeans uses a distance metric that is the same for all dimensions, which means it uses the top graph to do clustering
+What does that mean for a model trained on this data?
+9
+Scaling
+It means the model will be bad:
+Predicted 0 is mostly 1, but half the time it’s 2
+Predicted 1 is mostly 0, but half the time it’s 1 or 2
+Predicted 2 is always 0
+To help the model, we have to scale the data
+Make sure all values are between -1 and +1
+
+The result?
+
+10
+Scaling
+Scaling: The broader term for normalization and standardization
+Normalization:
+Min-max scaling
+All values between 0 and 1
+Sensitive to outliers
+Standardization (Z-score normalization)
+Uses mean and standard deviation
+Good for normally distributed data
+Preserves outliers
+
+
+11
+Scaling
+The downside to scaling is that the model expects scaled data, not the actual data
+You have to rescale the ‘new’ data before you can reliably assess a grouping
+But when rescaling we have to use the same values for scaling as before
+Not calculate the min, max or mean on only the new inference data
+12
+Summary
+Unsupervised learning looks for clusters in your data
+This can be done visually for 2D-data, but clustering can do the same in many dimensions
+
+Clustering can be used to predict a grouping, turning it into a kind of supervised learning
+
+When clustering make sure your data is standardized
+And when inferring, reapply the standardization
+13

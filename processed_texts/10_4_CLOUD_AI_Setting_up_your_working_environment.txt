@@ -1,0 +1,310 @@
+Chapter 3 – Setting up your working environment 
+Artificial Intelligence
+Note: Copied from Data Science in 2ITF
+Only run when you need to reinstall Python
+What will we be working with?
+Progamming language: Python
+IDE: Visual Studio Code
+Integrated Development Environment
+Use a virtual environment in Python
+Use Jupyter Notebooks
+
+Note: this is an active PowerPoint. You are supposed to follow along.
+
+2
+Python
+There are a few alternatives to Python for data science:
+Julia: Python, but you can compile it, so it’s faster. Good when Python becomes too slow, but not ideal to start with.
+R: Used mainly by statisticians, who were the first data scientists. Feels strange at first but is a very powerful language to work with data (importing/cleaning/creating graphs).  Preferred language to use in Business Intelligence tools.
+We chose Python because it’s widely used.
+3
+Windows, Linux or MacOS?
+Our examples and screenshots will always be made on Windows
+And we know our code works on Windows
+Because the teachers exclusively use Windows (for this course)
+But the tools we use are all cross-platform
+You can use MacOS or Linux
+So we decided:
+You’re free to use any OS you like
+If you have any issues with your code we will help you figure out what’s going on
+But we reserve the right to say “I can’t find the problem so it’s probably because you don’t use Windows. You figure it out.”
+4
+Installing Python
+Go to https://www.python.org/downloads/
+Download the latest version
+DO NOT quickly click next through the installation!
+Check the following slides
+5
+Installing Python
+First screen:
+“Add Python to path”
+Click “Customize installation
+6
+Installing Python
+Leave the following screen as it is
+7
+Installing Python
+Select “Install Python for all users”
+8
+Visual Studio Code
+Microsoft has had Visual Studio a long time
+Since the nineties
+Big, bulky program, only runs on Windows
+But recently they released Visual Studio Code
+Small and efficient
+Open source
+Works on any operating system
+Can be used for any programming language (through plugins)
+Integrates with github
+Can be used on a remote system
+We’ll be using the second one.
+
+9
+Installing Visual Studio Code
+Go to https://code.visualstudio.com/
+Download the latest version for your operating system
+Install using the default settings
+
+Alternatives
+Install using https://ninite.com/
+Install as a portable app
+Theoretically: use https://vscode.dev/
+
+
+10
+First time usage
+When using VSCode for the first time, it will ask a lot
+Default color scheme
+Sync your settings
+…
+All of these can be changed later, so simply choose a nice color scheme and close the window
+When starting a new type of file, there will be boxes on the lower right corner
+Click “install”, it’ll make your life easier
+11
+Opening a file
+You can use VSCode as a text editor
+
+
+You can open a file, edit it, and save it
+If it’s code and you have the extension, you can run it
+
+Although this works for some quick and dirty editing, it’s not the way you can get serious about developing
+
+12
+
+Opening a folder
+Step 1: create a folder
+You can decide which folder-structure to use, but we assumeyou have some sort of a system
+Keep this folder on onedrive, or google drive, or dropbox, or a USB-stick, or…
+Step 2: in VSCode, open this folder
+Everything you do in these folders will alsohappen on your hard-drive
+(Like create a subfolder per lesson, …)
+If you close VSCode and reopen it, you’ll beback inside this folder
+13
+Creating a Python-script
+Select a folder
+Click the “Add file”-icon
+Call the file “test_1.py”
+Add Python code that prints “hello world”
+Run the code using the little “play”-button in the upper right corner
+14
+
+Creating a Python-script
+The code runs in a terminal below
+The file is also saved in your folder
+
+When creating Python-scripts, this is the way to work
+
+15
+Using markdown files
+Sometimes we’ll be using markdown files
+Markdown is a way to style text using only simple markers, to help you write good looking text without using Word or HTML
+In your example-folder, create a file and call it “test.md”
+Add the following to the file
+16
+Using markdown files
+Save the file and right-click the tab, choosing “Open preview”
+
+
+
+
+
+
+The output will be the same file, but formatted
+There are tags for adding code, images, links, …
+17
+Using Jupyter notebooks
+We did code and we did markdown, but can we combine them?
+Yes! It’s called a Jupyter notebook
+Create a new file called “test3.ipynb”
+Add a markdown-cell and add some markdown-text
+
+
+
+
+Click the checkmark on the top right to display formatted text
+Double-click the formatted text to edit it again
+18
+Using Jupyter notebooks
+Create a couple of code-cells
+In the first cell put “a = 1”
+In the second cell put “print(a)”
+Run both cells
+If this is the first time you’re running Jupyter notebooks, VSCode will want to install a couple of things. Let them install.
+Note how the variable you made in cell 1 still exists in the second cell
+This is the big strength of Jupyter notebooks: you can try some code, create variables and based on the output of the code use the variables differently
+Example: I imported this excel-file but the numbers are string. Better fix that before continuing.
+19
+Using Jupyter notebooks
+Delete the first cell
+Now run the second cell again!
+The print still works!
+This is a pitfall: it’s not because you deleted a cell that the result of that cell is gone. The variables still exist and can still mess up your results.
+20
+Using Jupyter notebooks
+In the first cell put “print(b)”
+In the second cell put “b = 2”
+Run the second cell first and the first cell last
+Works!
+Another pitfall: when developing you move around the cells all the time. That is fine, but remember to always end up with a notebook that you can run top to bottom.
+It’s impossible, or at least very frustrating, to recreate the order in which you ran cells earlier. Keep it clean and tidy.
+21
+Using Jupyter notebooks
+In the first cell overwrite the len-function
+In the second cell, print the output of a len-function
+
+Output checks out, but you just made the default len-function (length of a list or string) impossible to reach
+Deleting the first cell won’t fix the problem (bad len-function is still in memory)
+Solution: restart the kernel
+22
+
+Using Jupyter notebooks
+When restarting all variables and functions are lost
+You start over
+If you are a particularly messy developer, restart your kernel by the end of the session
+If you can still run all cells top to bottom, it’s fine
+If you can’t anymore, something is wrong
+23
+Using Jupyter notebooks
+To print the contents of a variable, you can use print()
+
+But notebooks also print the output of whatever the last statement in the code-block is
+A variable
+Output of a function
+
+Not however
+This only works with the last function
+If the last function has no return-value, None is printed
+24
+Variable a isn’t printed!
+This last row is the output of the list comprehension ->
+Libraries
+When doing data science, you use a lot of libraries
+Pandas, matplotlib, numpy, seaborn, …
+These libraries are open source packages of code that have been written and that we can use on our own system
+You can install them using pip: (Do not do this on your own system yet!)
+25
+Libraries
+But the problem?
+
+
+
+We just installed numpy on our system. This means that numpy will be available on every python-session we use, and that is not a best practice.
+A rule of thumb: never install packages on your system, install them in a virtual environment
+And another rule of thumb: create a new virtual environment for every new project you start
+26
+Virtual environments
+(This you can do)
+Open VSCode and select “New terminal” on top
+
+
+
+In the terminal, type:
+Note: these are two separate commands, to be run on two different lines
+
+The terminal changes to 
+27
+Virtual environments
+Every library you now install ends up in the venv-subfolder:
+
+
+
+
+And that is where they belong, nice and close tothe code that is using them
+
+28
+Venv in Jupyter notebooks
+Once you have created a virtual environment it will be suggested as a ‘kernel’
+Open ‘test3.ipynb’
+Check the current
+kernel in the top right
+Click the current kernel to select a new one
+After some clicking on the top ofVSCode you can select it
+(Also install the ipykernel packagewhen asked to do so)
+29
+
+Venv in Jupyter notebooks
+Everytime you open a new notebook it will ask you which kernel to use
+Always select the venv you just made, never the default Python installation
+
+Nice to know: want a venv in an older version of Python?
+Install the older version of Python, but don’t let it register in the path
+Create the new venv using the full path to the new (old version of) Python
+That venv will from now on always use the old Python
+30
+Filling a venv
+We’ll be using quite a lot of libraries in this course
+You can install new libraries using “pip install …”
+And you can run this in a code cell by saying “!pip install …”
+And you can freeze an environment by using “pip freeze”
+
+All information in the notebook called “1 - Working with a venv.ipynb”
+In the exercises-folder
+Run it now!
+31
+Venv in github
+Finally, suppose you are working with a venv in a folder that is synced with github, do you want to upload your venv to github?
+
+No.
+
+You do want to run a pip freeze every now and then and upload the requirements file
+To prevent uploading the venv to github:
+32
+Debugging
+https://code.visualstudio.com/docs/datascience/jupyter-notebooks
+
+Read the above article. It will speed up your development enormously.
+33
+Copilot and Codeium
+Copilot and Codeium are two VSCode-plugins that will help you write code
+Basically, when you write a comment they look it up for you in Google and paste the code they found
+
+
+
+
+They are great tools that you should be using
+34
+Multiline cursor
+Ever needed to do the same thing on multiple lines?
+Multicursor editing!
+
+35
+Jupyter in your browser
+Tired of looking at the same VSCode interface?
+Try Jupyter in your browser!
+‘pip install jupyter’
+‘jupyter notebook’
+
+
+
+Note: during class we prefernormal VSCode, but this is toocool not to show…
+36
+Summary
+Setting up an IDE is always the first step when starting a new programming language
+It takes some time, but is worth doing right
+You may want to start out using a simple editor when trying a new language, but a good IDE will always help you work better in the long run
+After going through these slides you’ll have a working setup
+
+Try “1 – working with a venv.ipynb” now!
+
+37

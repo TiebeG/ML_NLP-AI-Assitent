@@ -54,5 +54,745 @@
     {
         "id": "2.6",
         "question": "Explain how Convolutional Neural Networks (CNNs), Autoencoders (AE), Fully Connected Networks (FCNs), Recurrent Neural Networks (RNNs), Transformers, and Generative Adversarial Networks (GANs) differ in their design and intended use cases. How does the architecture of each network type influence the kind of data it handles best and the nature of its output? Provide examples of real-world applications for these architectures."
+    },
+    {
+        "id": "3.1",
+        "question": "Explain why a fully connected feed forward neural network is not very well suited to model a computer vision task. And how a convolutional neural network (cnn) solves these problems."
+    },
+    {
+        "id": "3.2",
+        "question": "Explain the concept of a convolutional operation using the terms \u2018kernel\u2019, \u2018local receptive field\u2019, \u2018stride\u2019, \u2018padding\u2019, \u2018feature map\u2019, and \u20182D convolution\u2019. Can you think of any use cases of a 3D convolution?"
+    },
+    {
+        "id": "3.3",
+        "question": "Explain a typical CNN architecture for image classification (convolution + relu layers, pooling layers, flatten or GAP layer, fully connected feed-forward layer, batch normalization layer, and a softmax layer to do cross-entropy loss calculations)"
+    },
+    {
+        "id": "3.4",
+        "question": "Explain the concept of transfer learning to do computer vision modelling, and how we go about training such a network. Focus on the difference between feature extraction and fine tuning. Why was Imagenet such a big game-changer in this context?"
+    },
+    {
+        "id": "3.5",
+        "question": "The Imagenet Large Scale Visual Recognition Challenge caused some real innovative shifts in the deep learning CNN community. Explain following innovative architectural enhancements: the ReLU\u2019s and Dropout from Alexnet, the use of smaller and smaller kernels from VGG (why is this better?), and combining small and larger kernels with the identity convolution into a module, from Inception/GoogLeNet, and finally the use of skip connections from resnet and densenet architectures."
+    },
+    {
+        "id": "3.6",
+        "question": "Explain some advanced tweaking options from the fastai library, such as the learning rate finder, discriminative learning rates on top of the one cycle learning rate, and the use of fp16 mixed precision to optimize learning. And why is the \u2018timm\u2019 library such a useful addition to the standard fastai options?"
+    },
+    {
+        "id": "3.7",
+        "question": "Explain how convolutional neural networks for vision might be applied in non-traditional domains, such as sound classification, fraud detection, and malware detection. Would you still advise to use a pretrained resnet (trained on imagenet data) to be used in this context?"
+    },
+    {
+        "id": "3.8",
+        "question": "Adjusting the decision threshold in a binary classification model affects the confusion matrix. Discuss the trade-offs between precision and recall when changing the threshold. How does this impact the overall performance of the model?"
+    },
+    {
+        "id": "3.9",
+        "question": "Discuss why the Precision-Recall (PR) curve is more informative than the ROC curve for evaluating models on unbalanced datasets. Define precision and recall, and explain how the PR curve helps in understanding the performance of a classifier in such scenarios. What does the area under the PR curve indicate?"
+    },
+    {
+        "id": "4.1",
+        "question": "Discuss the evolution of object detection methods from na\u00efve template matching to HOG features and SIFT. What were the main limitations of these methods, and how did each subsequent method attempt to address them?"
+    },
+    {
+        "id": "4.2",
+        "question": "How do Convolutional Neural Networks (CNNs) improve feature extraction in object detection compared to earlier methods? Discuss the roles of regression and classification heads in these networks."
+    },
+    {
+        "id": "4.3",
+        "question": "What are the main challenges in object detection, such as scale, aspect ratio, and occlusion? How do techniques like Region of Interest (ROI) identification and non-maximum suppression help mitigate these challenges?"
+    },
+    {
+        "id": "4.4",
+        "question": "Compare and contrast two-stage detectors (e.g., R-CNN family) and one-stage detectors (e.g., YOLO). What are the advantages and disadvantages of each approach?"
+    },
+    {
+        "id": "4.5",
+        "question": "Discuss the importance of evaluation metrics in object detection. How do metrics like Intersection over Union (IoU) and mean Average Precision (mAP) help in assessing the performance of object detection models?"
+    },
+    {
+        "id": "4.6",
+        "question": "How does the threshold for non-maximum suppression affect the performance of an object detector?"
+    },
+    {
+        "id": "4.7",
+        "question": "Discuss the differences between semantic, instance, and panoptic segmentation. How do these tasks build upon object detection, and what architectural innovations enable pixel-level predictions while preserving spatial detail?"
+    },
+    {
+        "id": "4.8",
+        "question": "Compare CNN-based segmentation architectures (e.g., U-Net, Mask R-CNN) with transformer-based models such as SAM. What are the strengths and limitations of each approach in terms of spatial precision, scalability, and generalization? How does SAM leverage the massive SA-1B dataset to achieve zero-shot segmentation across diverse domains?"
+    },
+    {
+        "id": "5.1",
+        "question": "Large Language Models(LLMs) learn to predict the next word in context during training. Explain how embeddings emerge as a byproduct of this process, how they capture semantic meaning, and why dynamic embeddings outperform static ones in downstream NLP tasks."
+    },
+    {
+        "id": "5.2",
+        "question": "Explain the significance of parameters such as Context Window, Max Tokens, and Temperature in shaping the behavior of LLMs. How do these parameters influence the output generated by an LLM?"
+    },
+    {
+        "id": "5.3",
+        "question": "Compare and contrast supervised fine-tuning (SFT) and in-context learning as methods for adapting LLMs to specific tasks. What are the trade-offs in terms of computational resources, data requirements, and model performance?"
+    },
+    {
+        "id": "5.4",
+        "question": "What are the main challenges associated with LLMs? How does Retrieval Augmented Generation (RAG) address these limitations, and how do vector databases play a role in implementing RAG effectively?"
+    },
+    {
+        "id": "5.5",
+        "question": "Agentic AI frameworks like CrewAI allow for the creation of AI agents with specific goals and capabilities. Describe the key components of an AI agent within the CrewAI framework, including Crews, Agents, Tasks, Tools, and Processes. How does the concept of Chain-of-Thought reasoning enhance the decision-making process of a CrewAI agent?"
+    },
+    {
+        "id": "5.6",
+        "question": "In agentic AI frameworks like CrewAI, what is the role of memory (short-term vs. long-term) in creating more adaptive and context-aware agents?"
+    },
+    {
+        "id": "6.1",
+        "question": "Explain the concepts of tokenization, token normalization, and vectorization (numericalization) in the context of NLP. Make sure you explain: corpus, dictionary, vocab, stop words, stemming, and lemmatization. Briefly explain the difference between frequency based techniques to vectorize (BoW, TF-IDF), versus word embeddings"
+    },
+    {
+        "id": "6.2",
+        "question": "In NLP, when vectorizing tokens, we strive for a dense vector representation of the information contained in that token, and for some kind of measurable similarity between similar word vectors. All this is accomplished by word embeddings like word2vec. First, explain 3 common types of vector similarity measurements, and second, explain the principle of word2vec embeddings (either via CBOW, or via Skip-gram method). And third: can you explain the concept of self-supervised training in this context?"
+    },
+    {
+        "id": "6.3",
+        "question": "Discuss the limitations of Word2Vec embeddings. Explain why Word2Vec produces static, context-independent representations, how this causes problems with polysemous words (e.g., \u201cbank\u201d), and why it cannot capture sentence-level meaning or long-range dependencies."
+    },
+    {
+        "id": "6.4",
+        "question": "When modeling sequential data, like text or a time series, we have to be able to take context into account. Most common way to do this, is by employing a RNN. Explain the basic principles of this method."
+    },
+    {
+        "id": "6.5",
+        "question": "Explain why RNNs require memory when modeling sequential data. Describe how the hidden state functions as a dynamic memory that carries information from one timestep to the next. Why can the hidden state at a specific timestep be interpreted as a contextual word embedding, and what types of linguistic information does it encode?"
+    },
+    {
+        "id": "6.6",
+        "question": "When using an RNN to model sequential data, we come across the problem of long term dependencies and vanishing gradients. Explain these problems, and their solutions (in the context of RNNs)."
+    },
+    {
+        "id": "6.7",
+        "question": "Explain the components of an LSTM, that is, hidden state, cell state, and gates, and discuss their roles. How do the input, forget, and output gates manage information flow through the cell state to solve the short-term memory and vanishing gradient problems found in standard RNNs? What limitations still remain for LSTMs, especially concerning long sequences, computational cost, and parallelization?"
+    },
+    {
+        "id": "7.1",
+        "question": "Explain the concept of sequence-to-sequence modelling in NLP and compare how RNN-based Seq2Seq networks and Transformer-based Seq2Seq models encode and map input sequences to output sequences. What are the strengths and weaknesses of each approach?"
+    },
+    {
+        "id": "7.2",
+        "question": "Define transfer learning in NLP and explain how language models serve as the foundation for it. Describe the different transfer-learning strategies (feature-based, fine-tuning, prompting, instruction tuning, RLHF) and when each is appropriate."
+    },
+    {
+        "id": "7.3",
+        "question": "Explain the Transformer architecture in detail, covering stacked encoder/decoder blocks, multi-head self-attention and cross-attention, positional encodings, and residual connections. Why does this design outperform RNN-based architectures on many NLP tasks?"
+    },
+    {
+        "id": "7.4",
+        "question": "Describe the three main Transformer-based LLM architectures: encoder-only, decoder-only, and encoder\u2013decoder. For each type, give example models and explain which tasks they are best suited for and why."
+    },
+    {
+        "id": "7.5",
+        "question": "Explain why using a fixed-length context vector in vanilla Seq2Seq models leads to an information bottleneck. How does the attention mechanism solve this, and why does it improve translation and other Seq2Seq tasks?"
+    },
+    {
+        "id": "7.6",
+        "question": "Explain conceptually how self-attention computes relevance between tokens. Why is multi-head attention necessary, and what advantages does it provide in capturing different linguistic relationships?"
+    },
+    {
+        "id": "7.7",
+        "question": "Describe where self-attention and cross-attention appear in the encoder and decoder of the original Transformer architecture, and explain the function each mechanism serves in the overall model."
+    },
+    {
+        "id": "8.1",
+        "question": "Explain how Vision Transformers (ViTs) adapt the Transformer architecture to images. Describe how images are split into patches, how patch embeddings are created, and how self-attention enables ViTs to model global spatial relationships. Compare this to how CNNs model local patterns, and discuss when one approach may be more effective than the other."
+    },
+    {
+        "id": "8.2",
+        "question": "Compare major multimodal Transformer architectures: single-stream, dual-stream, contrastive dual-encoder, and fusion-generative models. For each architecture type (e.g., VisualBERT, ViLBERT, CLIP, BLIP), explain how vision and language inputs are processed and fused, and discuss the main advantages and limitations of each approach."
+    },
+    {
+        "id": "8.3",
+        "question": "CLIP uses contrastive pretraining on large-scale noisy data. Explain how contrastive learning works in CLIP, why dataset scale and diversity (e.g., WebImageText) are critical, and how CLIP performs well on zero-shot classification."
+    },
+    {
+        "id": "8.4",
+        "question": "Explain how BLIP\u2019s architecture enables both image\u2013text alignment and text generation. Why was this generative shift important for subsequent multimodal LLMs like BLIP-2, LLaVA, GPT-4, and Gemini?"
+    },
+    {
+        "id": "8.5",
+        "question": "Describe how BLIP learns aligned multimodal representations through its three pretraining objectives: contrastive learning (ITC), image\u2013text matching (ITM), and image-conditioned captioning. Explain how each objective contributes to vision\u2013language alignment, and why this alignment is essential for downstream tasks such as image captioning, VQA, and cross-modal retrieval."
+    },
+    {
+        "id": "8.6",
+        "question": "Describe the conceptual challenge BLIP-2 solves. How does this approach differ from earlier multimodal Transformers, and why did it influence modern multimodal LLMs?"
+    },
+    {
+        "id": "8.7",
+        "question": "Discuss how shared embedding spaces enable cross-modal tasks such as image\u2013text retrieval. Explain what it means for images and text to share the same latent space, how similarity is computed, and why well-aligned embeddings make cross-modal retrieval intuitive and effective."
+    },
+    {
+        "id": "10.1",
+        "question": "Suppose we record all information on our students (gender, race, height, shoe size, schooling history, profession of parents, \u2026) and use this to only allow students with a reasonable chance of succeeding to start in the first year. Would that be a good idea? Would it be an ethical idea? (Good: something that works, that does what it is supposed to, Ethical: Being in accordance with the accepted principles of right and wrong that govern the conduct of a profession. E.g., robbing a bank is a good idea because it gets you a lot of money fast, but it isn\u2019t an ethical idea because it is illegal and people may die.)"
+    },
+    {
+        "id": "10.2",
+        "question": "Suppose we record all school-related information on our students (class attendance, exam results, how long they studied, \u2026) and compare this with the results of students finishing the first year, it would give us an insight in their chances of finishing our program in a timely fashion. What if we forbid students that we think would not finish or take more than 4 years to continue in our program. Would that be a good/ethical idea? What if we wouldn\u2019t forbid them, but simply gave them a very strong warning (unless you dramatically change some of these parameters, you won\u2019t be finishing this program according to the data). Would that be a good/ethical idea?"
+    },
+    {
+        "id": "11.1",
+        "question": "\"The model should generalize to unseen data if you are using it to predict. If it\u2019s just to explain the data overfitting isn\u2019t a problem.\" Explain!"
+    },
+    {
+        "id": "11.2",
+        "question": "What are the key differences between classification and regression in supervised learning? Can you provide examples of each?"
+    },
+    {
+        "id": "11.3",
+        "question": "How does the concept of multidimensional space help in understanding the results of unsupervised learning algorithms?"
+    },
+    {
+        "id": "11.4",
+        "question": "Why is feature engineering crucial in predictive modeling? Can you give an example of a feature that significantly improved a model's performance?"
+    },
+    {
+        "id": "11.5",
+        "question": "What are the differences between linear and polynomial regression? When might you choose one over the other?"
+    },
+    {
+        "id": "11.6",
+        "question": "Why is RMSE a preferred metric for evaluating regression models? What are its advantages and disadvantages compared to other metrics?"
+    },
+    {
+        "id": "11.7",
+        "question": "What can residuals tell us about the performance of a model? How can you use residuals to improve your model?"
+    },
+    {
+        "id": "12.1",
+        "question": "What is the difference between classification and regression models?"
+    },
+    {
+        "id": "12.2",
+        "question": "Can you give examples of real-world problems that would use classification vs regression?"
+    },
+    {
+        "id": "12.3",
+        "question": "What kind of questions or predictions are best suited for regression models?"
+    },
+    {
+        "id": "12.4",
+        "question": "What are the main types of machine learning? How do they differ?"
+    },
+    {
+        "id": "12.5",
+        "question": "Why do we split the dataset into training and test sets? How does this help in evaluating the model's performance?"
+    },
+    {
+        "id": "12.6",
+        "question": "Why do we split data into training, validation, and test sets?"
+    },
+    {
+        "id": "12.7",
+        "question": "What could go wrong if you don\u2019t properly randomize your data before splitting?"
+    },
+    {
+        "id": "12.8",
+        "question": "What is the role of the validation set when tuning model parameters?"
+    },
+    {
+        "id": "12.9",
+        "question": "How can the sensitivity to the train/test split affect model performance? What strategies can you use to mitigate this sensitivity?"
+    },
+    {
+        "id": "12.10",
+        "question": "Why is it important for a model to generalize to unseen data? What are the risks of a model that doesn't generalize well?"
+    },
+    {
+        "id": "12.11",
+        "question": "What are the signs of overfitting and underfitting in a model? How can you address these issues?"
+    },
+    {
+        "id": "12.12",
+        "question": "What is the bias-variance tradeoff? How do you find the right balance between bias and variance in a model?"
+    },
+    {
+        "id": "12.13",
+        "question": "How do you model more complex patterns in data? What techniques can be used to capture these patterns effectively?"
+    },
+    {
+        "id": "12.14",
+        "question": "Why is it important to start with data exploration before modeling?"
+    },
+    {
+        "id": "12.15",
+        "question": "How do you determine if a model is good? What metrics and methods can you use to evaluate its performance?"
+    },
+    {
+        "id": "12.16",
+        "question": "What does RMSE (Root Mean Square Error) tell us about a model's performance? Why is it important to compare RMSE on both training and test datasets?"
+    },
+    {
+        "id": "12.17",
+        "question": "What does RMSE measure and why is it useful?"
+    },
+    {
+        "id": "12.18",
+        "question": "How does RMSE differ from MAE?"
+    },
+    {
+        "id": "12.19",
+        "question": "What does R\u00b2 tell us about a regression model?"
+    },
+    {
+        "id": "12.20",
+        "question": "Why do classification metrics not apply to regression problems?"
+    },
+    {
+        "id": "12.21",
+        "question": "What are TP, FP, FN, and TN in a confusion matrix?"
+    },
+    {
+        "id": "12.22",
+        "question": "Give some examples on why you'd want to optimize a model towards more TP (and more FP) or more TN (and more FN)."
+    },
+    {
+        "id": "12.23",
+        "question": "What does sensitivity (recall) measure, and why is it important in medical diagnostics?"
+    },
+    {
+        "id": "12.24",
+        "question": "What does specificity measure, and when is it more important than sensitivity?"
+    },
+    {
+        "id": "12.25",
+        "question": "Can you think of a scenario where high sensitivity is preferred over high specificity, and vice versa?"
+    },
+    {
+        "id": "12.26",
+        "question": "What does the F1-score balance, and when is it most useful?"
+    },
+    {
+        "id": "12.27",
+        "question": "What challenges arise when evaluating multiclass classification models?"
+    },
+    {
+        "id": "12.28",
+        "question": "What parameters can be calculated to assess the quality of multiclass classification models?"
+    },
+    {
+        "id": "12.29",
+        "question": "What is the difference between macro and micro averaging?"
+    },
+    {
+        "id": "12.30",
+        "question": "In multiclass classification, what are macro and micro average? What are the advantages of both?"
+    },
+    {
+        "id": "12.31",
+        "question": "When would you use macro average over micro average?"
+    },
+    {
+        "id": "12.32",
+        "question": "What does changing the classification threshold do to sensitivity and specificity?"
+    },
+    {
+        "id": "12.33",
+        "question": "What is an ROC and the AUC?"
+    },
+    {
+        "id": "12.34",
+        "question": "What does the ROC curve represent?"
+    },
+    {
+        "id": "12.35",
+        "question": "Why is the diagonal line in an ROC curve considered a \u201crandom classifier\u201d?"
+    },
+    {
+        "id": "12.36",
+        "question": "How can ROC curves help compare different models?"
+    },
+    {
+        "id": "12.37",
+        "question": "What does AUC-ROC measure and why is it useful?"
+    },
+    {
+        "id": "12.38",
+        "question": "Why might ROC curves be misleading in imbalanced datasets?"
+    },
+    {
+        "id": "13.1",
+        "question": "What makes a model \"generalize well,\" and why is that more important than just fitting the training data?"
+    },
+    {
+        "id": "13.2",
+        "question": "How can we tell if a model is too simple or too complex for the problem we're trying to solve?"
+    },
+    {
+        "id": "13.3",
+        "question": "Why might a model that performs well on training data still fail in real-world applications?"
+    },
+    {
+        "id": "13.4",
+        "question": "What are the risks of using overly complex models, even if they reduce training error?"
+    },
+    {
+        "id": "13.5",
+        "question": "How does the bias-variance tradeoff influence the choice of model complexity?"
+    },
+    {
+        "id": "13.6",
+        "question": "Why is it important to split data into training, validation, and test sets \u2014 and what could go wrong if we don\u2019t?"
+    },
+    {
+        "id": "13.7",
+        "question": "How does the size of your dataset influence how you should split it?"
+    },
+    {
+        "id": "13.8",
+        "question": "Why is it dangerous to tune a model using the test set?"
+    },
+    {
+        "id": "13.9",
+        "question": "What does RMSE really tell us about a model\u2019s performance, and when might it be misleading?"
+    },
+    {
+        "id": "13.10",
+        "question": "How can we model non-linear relationships without resorting to overly complex functions?"
+    },
+    {
+        "id": "13.11",
+        "question": "What are the benefits and drawbacks of using splines or polynomial regression to capture complex patterns?"
+    },
+    {
+        "id": "13.12",
+        "question": "Why is sensitivity to the train/test split (variance) a problem, and how can we detect it?"
+    },
+    {
+        "id": "13.13",
+        "question": "How does cross-validation help us build more reliable models, especially with limited data?"
+    },
+    {
+        "id": "13.14",
+        "question": "Why is stratified splitting important in classification problems, and what happens if we ignore it?"
+    },
+    {
+        "id": "13.15",
+        "question": "What are the trade-offs between bagging and boosting in ensemble learning?"
+    },
+    {
+        "id": "13.16",
+        "question": "Why does combining weak models often result in a strong model?"
+    },
+    {
+        "id": "13.17",
+        "question": "How does bootstrapping help when we don't have enough data?"
+    },
+    {
+        "id": "13.18",
+        "question": "What makes gradient boosting different from random forests, and when might one be preferred over the other?"
+    },
+    {
+        "id": "13.19",
+        "question": "Why is XGBoost often considered better than traditional gradient boosting?"
+    },
+    {
+        "id": "13.20",
+        "question": "What are the risks of using ensemble methods without understanding the individual models involved?"
+    },
+    {
+        "id": "13.21",
+        "question": "How do linear models help us understand relationships in data, even if they\u2019re not the most accurate predictors?"
+    },
+    {
+        "id": "13.22",
+        "question": "What assumptions do linear models make, and how can we check if those assumptions hold?"
+    },
+    {
+        "id": "13.23",
+        "question": "Why might regularization be necessary in linear models, and how does it help?"
+    },
+    {
+        "id": "13.24",
+        "question": "How can linear models be used to remove dominant effects in data to reveal subtler patterns?"
+    },
+    {
+        "id": "13.25",
+        "question": "What makes support vector machines effective in high-dimensional spaces?"
+    },
+    {
+        "id": "13.26",
+        "question": "Why is the choice of kernel so important in SVMs?"
+    },
+    {
+        "id": "13.27",
+        "question": "How does k-nearest neighbors differ from other models in how it \u201clearns\u201d?"
+    },
+    {
+        "id": "13.28",
+        "question": "What are the limitations of k-NN in high-dimensional or noisy datasets?"
+    },
+    {
+        "id": "13.29",
+        "question": "Why does Naive Bayes work well despite its unrealistic assumptions?"
+    },
+    {
+        "id": "13.30",
+        "question": "How do probabilistic models like Naive Bayes differ in philosophy from geometric or distance-based models?"
+    },
+    {
+        "id": "13.31",
+        "question": "How does the ensemble methods stacking differ from bagging and boosting?"
+    },
+    {
+        "id": "13.32",
+        "question": "Why is it important to understand the assumptions behind each model before applying it?"
+    },
+    {
+        "id": "13.33",
+        "question": "Can you explain how a model simplifies reality? Why might different models be needed for the same phenomenon?"
+    },
+    {
+        "id": "13.34",
+        "question": "How do models help us make predictions or decisions in complex systems? Can you think of a situation where using a model might lead to misleading conclusions?"
+    },
+    {
+        "id": "13.35",
+        "question": "How do conceptual, mathematical, and computational models differ in their use and limitations? Can you give an example where one type is more appropriate than the others?"
+    },
+    {
+        "id": "13.36",
+        "question": "Why is it important to understand the assumptions behind a model? How can model limitations affect the interpretation of results?"
+    },
+    {
+        "id": "13.37",
+        "question": "What criteria would you use to judge whether a model is useful or accurate? Can a model be useful even if it\u2019s not entirely accurate? Why or why not?"
+    },
+    {
+        "id": "14.1",
+        "question": "Why is it important to clean and prepare data before applying machine learning techniques?"
+    },
+    {
+        "id": "14.2",
+        "question": "What challenges might arise when scraping data from external sources, and how can they affect the reliability of your dataset?"
+    },
+    {
+        "id": "14.3",
+        "question": "What are the risks of ignoring missing values or improperly handling them during data cleaning?"
+    },
+    {
+        "id": "14.4",
+        "question": "Why is it crucial to use proper datetime datatypes instead of splitting dates into separate fields?"
+    },
+    {
+        "id": "14.5",
+        "question": "Why is exploring data important? Think patterns, correlations, and potential issues..."
+    },
+    {
+        "id": "14.6",
+        "question": "Why is domain expertise important during the data exploration phase?"
+    },
+    {
+        "id": "14.7",
+        "question": "How do different modeling techniques (e.g., regression, clustering) depend on the quality and structure of your data?"
+    },
+    {
+        "id": "14.8",
+        "question": "How do you determine whether your data is \"tidy,\" and why does this matter for analysis?"
+    },
+    {
+        "id": "14.9",
+        "question": "What problems can arise when variables, observations, or values are not properly separated in a dataset?"
+    },
+    {
+        "id": "14.10",
+        "question": "How can outliers distort statistical analysis, and what methods can be used to detect and handle them?"
+    },
+    {
+        "id": "14.11",
+        "question": "What is the difference between IQR and standard deviation when identifying outliers?"
+    },
+    {
+        "id": "14.12",
+        "question": "When should you remove outliers versus transform or model them separately?"
+    },
+    {
+        "id": "14.13",
+        "question": "How does data skewing affect averages and medians?"
+    },
+    {
+        "id": "14.14",
+        "question": "What are examples of positively and negatively skewed data distributions?"
+    },
+    {
+        "id": "14.15",
+        "question": "Why is it important to distinguish between categorical, ordinal, and nominal data types?"
+    },
+    {
+        "id": "14.16",
+        "question": "Why do we one-hot encode?"
+    },
+    {
+        "id": "14.17",
+        "question": "What are the pros and cons of imputing missing values using mean, median, or mode?"
+    },
+    {
+        "id": "14.18",
+        "question": "What can advanced imputation techniques (e.g., regression, KNN) introduce into your model?"
+    },
+    {
+        "id": "14.19",
+        "question": "What types of bias can affect data and models, and how can they be mitigated?"
+    },
+    {
+        "id": "14.20",
+        "question": "Why is it critical to keep the test set isolated during model development?"
+    },
+    {
+        "id": "14.21",
+        "question": "How does scaling affect different machine learning algorithms?"
+    },
+    {
+        "id": "14.22",
+        "question": "What role does feature engineering play in improving model performance and generalization?"
+    },
+    {
+        "id": "14.23",
+        "question": "How can derived features carry more predictive value than raw inputs?"
+    },
+    {
+        "id": "15.1",
+        "question": "What is the difference between time series data and non-time-series data?"
+    },
+    {
+        "id": "15.2",
+        "question": "Why can't 'normal' models be applied to time series data?"
+    },
+    {
+        "id": "15.3",
+        "question": "How can trends and seasonality in time series data affect forecasting accuracy?"
+    },
+    {
+        "id": "15.4",
+        "question": "Why is it inappropriate to randomly shuffle data when splitting time series into train and test sets?"
+    },
+    {
+        "id": "15.5",
+        "question": "How do different methods of filling missing values (e.g., forward fill, interpolation, ...) impact model performance?"
+    },
+    {
+        "id": "15.6",
+        "question": "What are the benefits and drawbacks of smoothing time series data before modeling?"
+    },
+    {
+        "id": "15.7",
+        "question": "Why is RMSE a suitable metric for evaluating time series models, and when might it be misleading?"
+    },
+    {
+        "id": "15.8",
+        "question": "How do sparse and dense datasets differ in structure and use cases?"
+    },
+    {
+        "id": "15.9",
+        "question": "When would you choose to convert sparse data into a dense format, and what are the trade-offs?"
+    },
+    {
+        "id": "15.10",
+        "question": "What is stationarity in time series modeling, and how can you test for it?"
+    },
+    {
+        "id": "15.11",
+        "question": "How does stability differ from stationarity?"
+    },
+    {
+        "id": "15.12",
+        "question": "What does first-order differencing achieve, and why is it useful for models like ARIMA?"
+    },
+    {
+        "id": "15.13",
+        "question": "What are inverse transformations and when do we need them?"
+    },
+    {
+        "id": "15.14",
+        "question": "How does autocorrelation help identify seasonality in time series data?"
+    },
+    {
+        "id": "15.15",
+        "question": "What insights can you gain from an autocorrelation plot, and how do you interpret spikes?"
+    },
+    {
+        "id": "15.16",
+        "question": "How do ARIMA, DeepAR+, ETS, NPTS, and Prophet differ in their approach to time series forecasting?"
+    },
+    {
+        "id": "15.17",
+        "question": "Why might you choose a non-parametric model like DeepAR+ or NPTS over parametric ones?"
+    },
+    {
+        "id": "15.18",
+        "question": "What are the strengths and limitations of Prophet, and in what scenarios is it most effective?"
+    },
+    {
+        "id": "15.19",
+        "question": "How does the choice of model depend on the characteristics of your time series data (e.g., missing values, seasonality, multivariate vs univariate)?"
+    },
+    {
+        "id": "16.1",
+        "question": "How does unsupervised learning differ from supervised learning in terms of goals and outcomes?"
+    },
+    {
+        "id": "16.2",
+        "question": "Why is clustering considered a form of pattern recognition rather than prediction?"
+    },
+    {
+        "id": "16.3",
+        "question": "What challenges arise when clustering data in more than two dimensions?"
+    },
+    {
+        "id": "16.4",
+        "question": "How does the KMeans algorithm determine which data points belong to which cluster?"
+    },
+    {
+        "id": "16.5",
+        "question": "What does the concept of \"inference\" mean in the context of unsupervised learning?"
+    },
+    {
+        "id": "16.6",
+        "question": "Why might a clustering model struggle to correctly group similar data, such as in the Iris dataset?"
+    },
+    {
+        "id": "16.7",
+        "question": "How can inertia help determine the optimal number of clusters in a dataset?"
+    },
+    {
+        "id": "16.8",
+        "question": "What does the \"elbow\" in an inertia plot represent, and how should it guide model selection?"
+    },
+    {
+        "id": "16.9",
+        "question": "Why does scaling affect the performance of clustering algorithms like KMeans?"
+    },
+    {
+        "id": "16.10",
+        "question": "What are the consequences of using unscaled data in distance-based clustering?"
+    },
+    {
+        "id": "16.11",
+        "question": "How do normalization and standardization differ, and when should each be used?"
+    },
+    {
+        "id": "16.12",
+        "question": "Why is it important to apply the same scaling parameters to new data during inference?"
+    },
+    {
+        "id": "16.13",
+        "question": "How can clustering be used to support supervised learning tasks?"
+    },
+    {
+        "id": "16.14",
+        "question": "What are the limitations of unsupervised learning when it comes to interpreting results?"
+    },
+    {
+        "id": "16.15",
+        "question": "How does scaling impact the interpretability and reliability of clustering outcomes?"
     }
 ]

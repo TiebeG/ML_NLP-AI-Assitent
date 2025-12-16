@@ -1,0 +1,84 @@
+Chapter 4 – Our first model
+Artificial Intelligence
+What are we doing?
+2
+Supervised: Classification vs regression
+3
+Classification
+Output is class label (discrete)
+Looking for boundaries
+Evaluate using accuracy
+Binary: 2 labels, Multi-class: more than 2 labels
+Regression
+Output is number (continuous)
+Looking for best fit line
+Evaluate using sum of squared error (r²)
+
+Unsupervised learning
+Does not require a data scientist to prepare the data
+Example: https://www.kaggle.com/code/ryati131457/titanic-unsupervised-kmeans
+Some preparation
+No guiding on which groups to make (you can’t ask the model who survived)
+But you get 5 groups of people that are at roughly the same  location in some multidimensional space (see next slide)
+Good to give insights in data beyond what regular statistics can do
+
+4
+Multidimensional space
+One dimensional:
+
+Two dimensional:  
+
+
+Three dimensional:
+
+
+More dimensional:  
+
+5
+17 dimensions?
+No problem.
+Feature engineering
+Feature: measurable input that can be used in a predictive model
+Price per ticket to predict survival of Titanic
+Feature engineering: convert raw observations into features
+Name contains title (Mr., Mrs., Master., Lady., Sir., …)
+Extracting this will yield a very valuable feature
+Remember that we are doing supervised learning, so we are responsible for providing the model with the data and labels
+
+6
+Creating models
+We’ll be creating models that fit our data
+In essence, any model can be used to predict and any model can be used to explain our data
+But some models are better suited to the one or the other
+
+7
+Linear regression
+How does linear regression work?
+Different (a, b) combinations
+How does linear regression work?
+Root-mean-square error
+Root mean square?
+Why do we use the RMSE to determine how good a model is?
+There are other ways, but they have issues:
+Simply add the errors: some errors are positive, others are negative. This doesn’t add up well.
+Add the absolute value of the errors: Could work but we really want to penalize the big errors.
+MSE: Same as RMSE, but not the root. Is a good metric but isn’t in the same unit as the actual data (as it’s still squared). (See link in notes.)
+RMSE: Squaring gets rid of the sign and increases the big errors. Value can be compared to the actual data.
+Calculating the residuals
+The residuals are the differences between the calculated values and the predicted values, the errors
+Remember that we were always working with two variables
+If the residuals no longer show a pattern, that was the main defining correlation in the data
+If the residuals still show some kind of a pattern the model doesn’t fully define the data (and won’t be able to predict it)
+Calculating the residuals
+
+hwyresid = hwyactual – hwypredicted
+Back to work!
+First, explore “1 – linear regression”. It explains why the model we’ll be making next won’t be very good.
+In “2 – the model” you’ll create a model that predicts the mpg of a car based on some parameters that you give.
+Finally in “3 – the app” we’ll turn this into a streamlit app that can be used.
+
+And why are we making a model which we know will be bad? Two reasons:
+https://www.youtube.com/watch?v=1rJ3Ga75OXE
+https://www.youtube.com/watch?v=-P11Bcpyw4g
+
+14

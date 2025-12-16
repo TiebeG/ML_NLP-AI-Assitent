@@ -1,0 +1,515 @@
+Chapter 6 – Models
+Artificial Intelligence
+Models
+As PyCaret showed us, there are quite a lot of models out there
+2
+How good is the model?
+The model should generalize to unseen data
+If you are using it to predict
+If it’s just to explain the data overfitting isn’t a problem
+Split up the given dataset:
+Build model on training dataset (e.g. 70%)
+Test model using test set (remaining 30%)
+Calculate RMSE (or recall) on both datasets
+Check that the RMSE on training is as low as it can be, but that the RMSE of test isn’t significantly higher
+Overfitting and underfitting
+Good model
+Line follows datapoints correctly
+Obvious outliers are ignored
+Underfitting
+Line only vaguely follows datapoints
+Outliers are ignored, but some data points too
+Is equally bad with unseen data as with trained data
+Can be a bad model, but also not enough training
+Overfitting
+Line follows datapoints exactly
+Outliers are taken very much into account
+Does not generalize to unseen data
+Model too complex, or too much training
+
+
+Overfitting and underfitting
+Overfitting and underfitting are measured using the RMSE
+In the example in the previous slide we’re not using a linear regression but a polynomial regression
+The question we are asking is how many polynomials we should be using
+A 17th-order function will have 17 zero-crosses, so will follow the data very well, but have next to no explainability
+It will also follow the data it is given, so the training data (which is the reason we kept some data secret in the test-set)
+
+
+Modeling more complex patterns
+A classical linear model will not do!
+Modeling more complex patterns
+RMSE_train = 2.971
+RMSE_test = 3.020
+RMSE_train = 2.779
+RMSE_test = 3.204
+Natural spline with 3 degrees of freedom
+Natural spline with 1 degrees of freedom
+Modeling more complex patterns
+RMSE_train = 1.988
+RMSE_test = 3.120
+RMSE_train = 1.092
+RMSE_test = 1.310
+Natural spline with 7 degrees of freedom
+Natural spline with 5 degrees of freedom
+Modeling more complex patterns
+RMSE_train = 0.189
+RMSE_test = 1.783
+Error on training is low, but error on test set is much higher Model does not generalize well.
+Natural spline with 65 degrees of freedom
+Sensitivity to train/test split
+Also called variance: error from sensitivity to small fluctuations in the training set
+Natural spline with 65 degrees of freedom,
+train/test split v1
+Natural spline with 65 degrees of freedomtrain/test split v2
+Under- and overfitting
+Underfitting
+Model is not complex enough
+Overfitting
+Model is too complex
+Model is too sensitive to the training dataModel does not generalize well
+Natural spline with 3 degrees of freedom
+Natural spline with 65 degrees of freedom
+The bias-variance tradeoff
+High bias
+Low variance
+Low bias
+High variance
+How to find the sweet spot?
+Not allowed to use the test set!
+Split up dataset in 3 parts
+Build model on training set (60%)
+Check complexity against validation set (20%)
+Verify quality on test set (20%)
+
+
+Divide data in three subsetsTrack RMSE as complexity increases
+Sweet spotOK biasOK variance
+No improvement
+High biasLow variance
+Low biasHigh variance
+6.1 - Bias variance tradeoff
+For clean and large enough dataset:
+The greater the model complexity the lower the estimation error, the better the approximation.
+The greater the model complexity the lower the bias
+The greater the model complexity the lower the variance
+For noisy dataset:
+Greater model complexity doesn’t mean lower estimation error
+The greater the model complexity the lower the bias
+The greater the model complexity the higher the variance
+Two pieces of cake
+Up until now we’ve been cutting our data-cake into two pieces
+Train
+Test
+There are guidelines on these percentages:
+
+
+
+
+You use this when you have only 1 model
+
+
+16
+One model
+Basic split: Train/Test
+In a simple setup:
+Training set: Used to train the model.
+Test set: Used once at the end to evaluate performance.
+This works if you train only one model or do no hyperparameter tuning.
+
+But in real-world model development, that's rarely the case.
+
+17
+Two pieces of cake
+Using only two pieces, suppose you do the following:
+For(i=1;i<=10;i++)
+Tune parameters
+Train a model using the train set
+Test the model using the train set
+Save the model and the parameters
+This means that the model has seen the test-set 10 times already! We risk overfitting on the test-set, which is exactly what the test-set was trying to prevent
+18
+Two three pieces of cake 
+For(i=1;i<=10;i++)
+Tune parameters
+Train a model using the train set
+Test the model using the validation set
+Save the model and the parameters
+Test the best model using the test set
+This way we get an estimate on how good the model will work on unseen data
+19
+Multiple models
+When comparing models or tuning: Train/Validation/Test
+You now have three sets:
+Training set: Used to train the models.
+Validation set: Used to compare models or tune hyperparameters (like the number of trees in a random forest).
+Test set: Used only once at the very end to report the unbiased performance of the chosen model.
+Why this is necessary:
+If you use the test set for model selection (or tuning), then it's no longer a true test — you're indirectly training on it by choosing what performs best on it. This leads to overfitting to the test set, and your performance estimate becomes optimistically biased.
+
+20
+Stratified split
+A stratified split ensures that each class is represented in approximately the same proportions in both the training and test (or validation) sets as in the full dataset.
+Suppose you have a binary classification problem:
+90% of your samples are class A
+10% are class B
+If you randomly split your data without stratification, your test set might (by chance) contain very few or no samples from class B, making the model evaluation unreliable or biased.
+Stratification guarantees that:
+If your full dataset is 90% A and 10% B,
+Then both your training and test sets will also be about 90% A and 10% B.
+
+21
+Stratified split
+A stratified split should always be used in classification-problems, especially if the classes are imbalanced
+Fun fact: we flouted this rulea lot of times in the previousnotebooks
+
+
+But, stratification is only used on classification problems, not regression
+You could use binning, but it’s not common
+
+22
+Cross-Validation
+When the amount of data is limited, use cross-validation
+It is a technique to make sure your model is reliable by testing it on multiple different splits of the data instead of just one.
+With cross-validation, we:
+Split the data into multiple parts (called folds)
+Train the model on some of them
+Test the model on the remaining part
+Repeat this several times, each time with a different part as the test set
+Finally, we average the results to get a more reliable estimate of model performance
+23
+Cross-Validation
+Benefits
+Makes better use of limited data
+Gives a more robust estimate of model performance
+Helps prevent overfitting to a single train/test split
+Downsides
+Computationally expensive (it trains the model multiple times)
+Unusable for time series (violates causality)
+Variance in results (can lead to unstable performance estimates)
+24
+Evaluating AUC-ROC
+One model -> one ROC curve -> one number for AUC
+More models -> more ROC curves -> compare multiple AUC’s
+Same model with different tuning
+Or a different model
+More models -> more training and testing of models
+25
+The models
+(finally)
+There are a lot of models
+We’ll start with the very easy and understandable ones, and stop before it get’s really complicated
+Which is a pity, as one could expect these models to be better
+But the prerequisites of this course were not “a PHD in mathematics”
+Also, even in machine learning deep learning networks are becoming more prevalent, and we have another course for those
+The good part: using a difficult model is the same as using an easy one!
+26
+An overview of the model
+See 4.2 - Model overview.ipynb
+
+
+(Sometimes a slide simply isn’t big enough)
+27
+Classification or regression?
+Most models can be used for both classification and regression, despite this not always making sense (like a decision tree)
+Can be used for both:
+Decision trees, random forest, gradient boosting, XGBoost
+Can only be used for classification
+Logistic regression
+Can only be used for regression
+Linear regression
+28
+Decision boundary
+29
+The subtlety of overfitting
+Overfitting is a real risk
+The left image is underfit, the right one is overfit
+
+
+
+
+This shows overfitting can be a problem even when using simple models
+Also, this is overfitting with 2 dimensions, the same works in 17 dimensions
+Or 103, when using the yeast dataset
+30
+Decision trees
+Simple, interpretable models that split data based on feature thresholds. Prone to overfitting.
+You ask the model to create a tree with yes/noquestions
+Depending on the answer you go downone or the other path in the tree
+Eventually you end up with a class ordecision
+Fun fact: the top two rows inthis tree are interchangeable
+
+31
+Decision trees
+An easy model to train, the best model to explain
+You’d say it outputs a hard value for class, but it doesn’t
+When a sample reaches a leaf node, it doesn't just get a hard label, it also has access to the class distribution of the training data that ended up in that leaf during training.
+For example, imagine a leaf node was trained on 20 samples:
+15 were class 0
+5 were class 1
+The predicted probabilities from that leaf will be 75% and 25%
+As we saw in notebook 3.4 (multiclass on wine) the tree you get depends on the input data and the train/test split
+32
+Can decision trees do regression?
+Regression predicts a continuous value, but after binning a continuous variable it becomes a categorical variable.
+To determine leaf value, you can take average, median, …of the bin. Or get fancy and do a linear regression for thevalues inside the bin, or…
+
+
+
+33
+Random forest
+One tree is nice, but what if we made 100 trees and combined the results?
+
+But if we simply started from the same data we’d get almost the same tree 100 times…
+
+We’ll train on a random sample of the data and on a random subset of features!
+
+But what if one tree says 1 and the other says 2?
+
+We can combine the results using classification (majority vote) or regression (average the results
+
+34
+Random forest
+By combining many weak, noisy trees, you get a stronger, more stable model.
+It reduces overfitting and improves generalization
+Analogy
+Think of it like asking 100 slightly different experts for their opinion and going with the consensus instead of trusting just one
+Also, among them are experts in a couple of the features (random feature selection)
+35
+Ensemble learning
+When going from decision trees to random forests, we started doing “ensemble learning”
+Ensemble methods combine the predictions of multiple models to improve performance
+Bagging and boosting are two main strategies
+Random forests do bagging
+XGBoost does boosting
+Stacking is a third way
+Train a bunch of different models
+Train another model to learn which model to use in which case
+
+36
+Ensemble learning
+The baseline is in all cases: When using ensemble learning we predict the outcome value using a bunch of different methods. Then we combine the outcome of all these algorithms and retain the most voted answer.
+
+37
+Bagging (bootstrap aggregating)
+Goal: Reduce variance (overfitting)
+How: Train several models in parallel on random subsets of the data
+(with replacement = bootstrapping).
+Combine: Average (for regression) or majority vote (for classification).
+Key idea: Many weak models → One strong model
+Random Forest = Bagging + Decision Trees
+Each tree is trained on a different bootstrap sample and considers only a random subset of features at each split.
+38
+Bootstrapping
+If you need more data you can do more experiments, or you canbootstrap your data
+Getting more data is expensive and not always possible
+Bootstrapping is the answer in that case
+
+
+39
+Bootstrapping
+We make a new dataset and use ‘sampling with replacement’. This means we copy random values and don’t care if we already copied a value.
+This new dataset is called the bootstrap. 
+
+40
+Bootstrapping
+… and repeat
+
+This is the process used in random forest, but in stead of calculating the mean it calculates decision trees
+41
+Boosting
+Goal: Reduce bias (underfitting).
+How: Train models sequentially, where each new model focuses on correcting errors made by the previous ones
+Combine: Weighted sum of all models
+Key idea: Trained models become smarter over time
+Examples:
+Gradient Boosting
+AdaBoost
+XGBoost / LightGBM / CatBoost (fast and optimized versions)
+
+42
+Homogeneous ensemble
+43
+Bagging versus boosting
+44
+Independent
+weak learner
+training
+Iterative
+weak learner
+training
+Random forest
+Random forest does bagging using decision trees
+It starts with the training set and turns this set into many different data-sets
+Based on a random selection of the datapoints
+The same datapoints can be used in many sets
+All decision trees are calculated
+The results are averaged or chosen using majority voting
+Sklearn – RandomForestClassifier: majority voting (even when doing regression)
+Sklearn – RandomForestRegressor: averaging
+45
+Gradient boosting
+Bagging is parallel, boosting is in series
+Gradient boosting is a machine learning technique that builds a strong model by adding together many weak models, each one correcting the mistakes of the previous ones
+Start simple: Begin with a basic model (like a small decision tree)
+Check errors: Look at where this model made mistakes
+Build a new model: Train another tree to predict the errors (the “residuals”)
+Add it to the mix: Add the new model’s prediction to the original one (like a correction)
+Repeat: Keep repeating this process
+46
+Gradient boosting
+Each new model is trained to reduce the loss (like error or log-loss), and this is done using the gradient of the loss function
+The loss-function is the calculation of the errors, like the MSE
+
+
+This you can use to make a better model
+But let’s hear more from an expert:
+47
+(As we’re on youtube…)
+48
+eXtreme Gradient Booster
+Gradient boosters are good, but eXtreme gradient booster is better!
+Designed for maximum performance and flexibility
+
+49
+Code comparison
+50
+Heterogeneous ensemble
+Do one train/test split
+You don’t need a validation set because you’re not comparing the models, you’re building and using them concurrently
+Give the training data to a bunch of different models
+Choose another model as the meta-model
+This model will get to make the final decision
+Use the test-data to check how great your models working together are!
+51
+Heterogeneous ensemble
+[A bit of code says more than a thousand words]
+52
+Linear models
+“Now that we've explored tree-based models (flexible, nonlinear, and often opaque), let’s turn to a different class of models: linear models
+These are simpler, faster, and easier to interpret, and they can be highly effective when the relationship between input features and the target is linear (or nearly linear)
+A linear model assumes a straight-line relationship
+
+Two main types:
+Linear regression: predicting continuous values
+Logistic regression: for binary (or multi-class) classification
+53
+Linear models
+Advantages:
+Fast to train, works well on high-dimensional data
+Easy to interpret (feature weights show importance)
+Often a strong baseline model
+Limitations:
+Struggles with nonlinear relationships
+Sensitive to multicollinearity and outliers (though regularization helps)
+54
+Linear models
+Linear models may not be the best predictors, but they have another use case:
+The price of a diamond is heavily defined by the weight
+Diamonds have a cut as well, and this cut also has a certain influence
+Unfortunately, the influence of the price is so big that this relationship disappears completely
+We could use a linear model on price vs weight to get this influence out of the dataset
+That would enable us to see the actual relationship between cut and price
+Check out “4.3 - Diamonds modeling.ipynb”
+55
+Linear Regression
+RMSE is essential...
+Measures average prediction error
+Penalizes large errors (squared)
+Great for comparing model performance
+...but not the whole story
+56
+Support Vector Machines (SVM)
+A Support Vector Machine (SVM) is a supervised machine learning algorithm used for classification (mainly) and sometimes for regression tasks
+How It Works (Intuitively)
+Plot the Data in n-Dimensional Space: Each data point is a vector of features.
+Find a Hyperplane: A hyperplane is just a line (2D), plane (3D), or higher-dimensional flat surface that divides the space.
+Maximize the Margin: SVM chooses the hyperplane with the greatest distance to the nearest points from either class.
+Use the Support Vectors: Only the closest points (support vectors) affect the decision boundary. All others are ignored.
+57
+Support Vector Machines (SVM)
+Instead of computing dot products in high-dimensional space (which is expensive), the kernel function computes it directly.
+Common kernels:  Linear, Polynomial, Radial Basis Function (RBF/Gaussian), Sigmoid
+Pros:
+Works well with high-dimensional data
+Effective when there’s a clear margin of separation
+Robust to overfitting, especially in high dimensions
+Cons
+Not great for very large datasets (slow training)
+Poor performance when data is highly overlapping
+Choice of kernel and hyperparameters can be tricky
+58
+Instance based methods
+k-Nearest Neighbors (k-NN) is a supervised learning algorithm used for both classification and regression (though it's more commonly used for classification)
+A lazy learning algorithm, meaning it doesn’t actually learn a model during training but it stores the training data and makes decisions only at prediction time
+How It Works (Intuitively)
+Pick a number k — this is the number of neighbors to consider.
+Calculate distances between the new (unknown) data point and all training data points (commonly using Euclidean distance).
+Find the k closest data points (neighbors).
+Vote:
+For classification → assign the majority class among the neighbors.
+For regression → return the average value of the neighbors.
+59
+Instance based methods - kNN
+Example: Suppose you're trying to classify a fruit as an apple or an orange, based on its weight and color
+If k=3, the algorithm will:
+Look at the 3 closest fruits in your dataset
+If 2 are apples and 1 is an orange → predict apple
+Choosing k
+Small k (e.g. 1) → sensitive to noise (overfitting).
+Large k → smoother decision boundaries but may underfit.
+Typically, odd k values are used to avoid ties in binary classification.
+60
+Instance based methods - kNN
+Pros
+Simple and intuitive
+No training phase — fast to set up
+Works well with small datasets and well-separated classes
+Cons
+Slow at prediction time for large datasets (needs to compare to all points)
+Sensitive to irrelevant or unscaled features
+Poor performance in high-dimensional spaces (curse of dimensionality)
+61
+Naive Bayes
+Naive Bayes is a supervised learning algorithm based on Bayes’ Theorem, used primarily for classification tasks
+Bayes: because it relies on Bayes’ Theorem
+Naive: because it assumes that features are independent given the class (which is almost never true in practice, but it works surprisingly well)
+
+How it works:
+P(Class | Features): What we want (posterior).
+P(Features | Class): Likelihood — how typical the features are for this class.
+P(Class): Prior — how common this class is overall.
+P(Features): Same for all classes, so can be ignored when comparing.
+
+62
+Naive Bayes
+Let’s say you’re building a spam detector:
+Features: presence of certain words (“free”, “win”, etc.) to classify “Spam” vs “Not spam”
+Naive Bayes:
+Learns how often words appear in spam and non-spam emails.
+Given a new email, it multiplies the probabilities of the observed words per class and picks the most probable class.
+Pros
+Very fast to train and predict
+Works well with high-dimensional data (e.g., text)
+Robust to irrelevant features
+Requires very little training data
+Cons
+Assumes feature independence, which is rarely true
+Doesn’t work well with correlated features
+Struggles when data is imbalanced without adjustments
+63
+Comparing the “extra” models
+64
+Summary
+We did the tree-models
+Decision trees, random forest, gradient booster
+Also bagging, boosting, bootstrapping and stacking
+Then we did some linear models
+Just linear regression, but when you understand RMSE there’s not much more to learn
+We can’t do neural networks
+Is reserved for the other course
+Stealing course material is severely looked down on among teachers
+We glossed over the special cases
+SVM, kNN and Naïve Bayes
+Clustering and time series are for a later chapter
+65

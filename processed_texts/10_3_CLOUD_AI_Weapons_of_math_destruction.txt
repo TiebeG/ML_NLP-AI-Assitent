@@ -1,0 +1,336 @@
+Weapons of math destruction
+Why statistics are bad
+https://weaponsofmathdestructionbook.com/
+Weapons of math destruction
+“O’Neil’s book offers a frightening look at how algorithms are increasingly regulating people… Her knowledge of the power and risks of mathematical models, coupled with a gift for analogy, makes her one of the most valuable observers of the continuing weaponization of big data… [She] does a masterly job explaining the pervasiveness and risks of the algorithms that regulate our lives.”—New York Times Book Review
+Cathy O’Neil
+is a data scientist and author of the blog mathbabe.org. She earned a Ph.D. in mathematics from Harvard and taught at Barnard College before moving to the private sector, where she worked for the hedge fund D. E. Shaw. She then worked as a data scientist at various start-ups, building models that predict people’s purchases and clicks. O’Neil started the Lede Program in Data Journalism at Columbia and is the author of Doing Data Science. She is currently a columnist for Bloomberg View.
+
+A model
+We create a mathematical model, and let it run through data
+Résumés, clicks, grades, …
+This is unbiased, since the model doesn’t consider unrelated factors
+Gender, skin color, prior education, …
+But the model is made by the same fallible humans that said black people couldn’t sit in the front of the bus
+And the models encode the prejudice, misunderstanding and bias into a seemingly objective, mathematical model
+
+The book tells about bad models, and the harm they did and do
+
+Why?
+You will be the next generation of model-builders
+This presentation is to make you think about what you will be creating, and the impact you will be having on actual real people
+It’s not about discouraging the technological development
+Schools in Washington
+Washington D.C. in 2007, mayor Adrian Fenty wants to turn around the city’s underperforming schools
+Education reformer Michelle Ree becomes chancellor of WDC schools
+Theory: It’s the teachers fault
+Stating from 2009: weed out the bad teachers
+Created an assessment tool called IMPACT, and fire everyone in the bottom 2% procent the first year, bottom 5% the second year (206 teachers)
+The model: value-added modeling
+Measure the improvement of students on certain topics (math and language)
+Counts for 50% of the overall score because it can be objectively measured
+Bad teachers can seem good teachers, because they are friendly
+Schools in Washington
+Sarah Wysocki
+Been teaching for 2 years
+Excellent reviews from principal and student’s parents
+Miserable IMPACT score: Fired
+Why?
+Nobody really knows how the model works, but the model is never wrong!
+Complex because the socio-economic background of students and learning disabilities need to be taken into account
+And it’s a mathematical formula. You can’t read or understand these without a PhD!
+
+Sings of a WMD
+Opacity
+Is someone who is scrutinized by the WMD aware of this?
+Can they look up the reasons why something happened to them?
+Can someone explain why (they didn’t get a loan, they got fired, …)?
+Scale
+How widely are the models applied?
+A model is usually created based on a subset of a population, but applied to the entire population
+Damage
+How many parts of your life will the WMD hurt?
+Can ‘performing badly’ hurt the ones subjected to the test?
+E.g. no loan and no job because of a bad credit score
+https://www.youtube.com/watch?v=aRrDsbUdY_k
+
+Schools in Washington
+What happened to Sarah Wysocki?
+Students starting the year had great scores on their test, but didn’t have the skills to back them
+Sarah did her best to get them on a higher level, but the scores still looked like she had underachieved
+And the teacher of the year before did great
+Also, she had 30 students, which is not enough for a statistical approach
+She quickly found a new job in a private school, making more money
+The less privileged kids lost a good teacher, and kept a bad one
+
+Moneyball
+August, 1946, the Cleveland Indians
+Ted Williams, playing the opposition, destroyed them
+Three home runs, driven home eight
+In the second game, Williams came on again
+The Indians moved to the right
+This is data science: Ted Williams usually hits to the right, so that’s where we will be standing
+Now: different positions for every player
+And also: record and grind all the data
+
+
+
+Moneyball
+The baseball case is not a WMD
+Transparent:
+Stats are publicly available
+Everyone can understand how they are interpreted
+Values are sometimes differently weighed, but never discarded
+Feedback:
+The effect of a change is measured by the same data
+… and will be taken into account in the future
+We are working with the actual data
+We count the number of strikes to know how good they are at striking
+We don’t look at skin colour to check the chance of robbing a liquor store
+The model is constantly checked and improved
+Prison
+In America, it costs about 31,000$ to house an inmate for a year
+$70 billion a year in total
+We can cut down on this cost be reducing sentences
+But only for inmates that won’t recidivate!
+Solution: Recidivation models
+Measure the current inmates chance of recidivation
+Give this information to judges who determine length of sentence
+One of the models: LSI-R (level of service inventory-revised)
+A questionnaire for all inmates
+LSI-R
+Ok questions:
+How many prior convictions have you had?
+What part did others play in the offense?
+What part did drugs and alcohol play?
+Not ok questions:
+The first time you were involved with the police?
+Black and latino’s are 4.7% of New Yorks population, but 40.6% of stop-and-frisk subjects
+A white kid carrying a joint gets away with it, a black kid won’t
+Do you have friends or family with a criminal record?
+Middle class: no, poor people in cheaper housing: yes
+Asking for race would be illegal, but the question is unnecessary
+
+
+The results of LSI-R
+Judges: Seems like people with little chances in life are prone to recidivation. Let’s give them longer sentences.
+Employers: This man did a long sentence. Let’s hire the one who did a shorter sentence.
+The man: I need some food. Let’s rob a liquor store.
+LSI-R: The man seems susceptible to recidivism. Better suggest longer prison sentences for everyone like him.
+
+E.I. longer sentences are bad in country notoriously bad with re-entry
+https://www.youtube.com/watch?v=gJtYRxH5G2k
+
+LSI-R
+The LSI-R doesn’t judge who you are, but where you come from
+In some states the results are only used while in prison
+For anti-recidivism programs
+But in others, it’s used to determine the length of the sentence, which is illegal
+You can’t give someone a longer prison sentence because they are black, but you can give someone a longer prison sentence because they live among blacks?
+But you can’t argue with a mathematical model…
+Baseball vs LSI-R
+The baseball model was a good model
+You measure what you want to know (strikes and catches)
+You refine the model based on actual data (we didn’t catch the ball moving left, so lets not move right and see what happens)
+The stats are open and can be discussed
+The LSI-R was a bad model
+You measure proxies (where someone lives vs if they’re robbing liquor stores)
+You refine the model based on the outcome of the model (if we keep people of type A in prison longer, people of type A are associated with criminals more)
+Prisoners know what the questionnaire is for, but never get their ‘results’
+
+School ranking
+1983, U.S. New & World, a struggling magazine makes a report: Evaluate all 1.800 colleges and universities and rank them
+Would help millions in choosing a college
+But what information shall we use?
+In the beginning, surveys by the university presidents
+But that’s unfair, so they started looking at the data
+But how to measure “educational excellence”
+You can’t measure learning, happiness, confidence of friendships, …
+
+School ranking
+So proxies were chosen
+SAT-score, student-teacher ratios, acceptance rates
+Percentage of starting vs finishing students
+Percentage of alumni donating money
+The proxies are driven through a model
+Results came in 1988, and seemed fine
+But would you (the elite) choose for a sub-optimal college?
+Off course not!
+School ranking
+A school scoring badly
+Loses promising students
+Loses top professors
+Alumni are unsatisfied and stop donating
+And their scores drop even further…
+Schools, instead of developing their strong points, now develop their ranking scores
+Baylor University: paying students to retake SAT
+Bucknell and Claremont McKenna: send fake SAT scores
+Iona: fake numbers about everything
+School ranking
+In 2008, Texas Christian University was improving, but the score was going doing down
+It’s a ranking, and if everybody rises, you have to rise faster
+So, TCU launched a fund raiser, and got $434 million
+They started to increase their rating
+Campus improvement (boosts the ranking)
+Money into the football program
+Which got them a great football season
+Which meant applications went up by 30%
+Which meant they could be more selective in selecting applicants
+Which meant they got better SAT scores and rose 37 places
+School ranking
+What TCU did was a good thing
+The school actually became better by trying to rise in the ranking
+The proxies are good, measuring “learning” quite accurately
+The problem is that all schools are ranked the same
+A student with a bad SAT score is ‘bad credit’
+No schools want them, only the very worst
+Also, tuition and fees are not calculated
+Because if they did, Harvard, Stanford and Princeton wouldn’t have been first, and nobody would have cared for the ranking
+Meaning colleges can charge whatever, as long as they rank highly
+School ranking
+From 1985 to 2013, the cost of higher education has risen 500%
+4 times inflation
+Schools look great now
+Glass-walled student centres, gyms with climbing walls, whirlpool baths
+But students graduate with student loans that will burden them for decades
+Also: companies have arisen that help colleges pick their students
+Some athletes, some rich students, some students with learning disabilities
+
+School rankings
+
+https://www.collegeconsensus.com/rankings/best-college-admissions-consultants/
+
+
+
+School rankings
+These are companies that specialize in ‘getting students into schools’
+They have reverse engineered the system schools use to get a high ranking, and apply that to students wanting to get into those schools
+It offers guaranteed consulting packages
+
+
+
+This reduces the qualifications for top universities to ‘being rich’
+Or a good athlete
+School rankings: the solution
+Are school rankings a bad thing? Yes and no
+No:
+Students need to know about the bad schools
+And this information is hard to come by
+Yes:
+There is no one ranking, every school has its strong and weak points
+Some students need school A, others school B
+Some companies will hire from school A, others from school B
+The best school is the school that best suits your needs
+We need to provide honest and objective information on schools, not summarize this information in one single ranking
+School laptop rankings
+Dell XPS 13
+Good graphics
+Medium sized display
+Fast HD
+Weighs 1,17 kg
+HP Omen
+Great graphics
+Big display
+2 HD’s
+Weighs 2,23 kg
+Het nieuwsblad,17-3-2023
+School rankings
+Flemish minister for education Ben Weyts: good idea
+Educationalist Pedro De Bruyckere: beware of the problems
+New verb: Clopening
+Closing (in the evening) and opening a store or bar (the following morning)
+Not popular among employees
+Happens often with low-wage jobs in companies like McDonalds, Starbucks, …
+
+
+Scheduling: the old days
+Clerks work 9 to 5, six days a week
+Problem: Tuesday mornings are really slow and Saturdays are very busy
+Solution: on Tuesday morning only the owner is there, on Saturday you hire an additional student
+Scheduling: now
+Bluetooth-receptors and analysis of security-cam footage: companies know who is there when, and for what
+Include external data: weather reports, pedestrian patterns, seasonal changes, …
+Schedules of employees are changed accordingly
+And fast, sometimes you don’t know a week in advance when you’ll be working
+
+Scheduling
+In 2014, the New York Times ran an article on Janette Navarro
+Has a four year old kid, is a student in college, is working at starbucks
+But, scheduling was hard
+Day-care was impossible
+School was difficult to plan
+Result: she dropped out of school (the only thing she could stop)
+US Government data:
+2/3 of food service workers and nearly ½ of retail workers find out about schedule changes less than a week in advance
+Scheduling
+Embarrassed, major corporations vowed to eliminate clopenings and all work hours would be posted at least a week in advance
+A year later, this still wasn’t the case
+The problem: minimal staffing was in the culture of these companies
+The pay of the manager depends on the efficiency of the staff
+Measured in revenue per employee hour
+Scheduling software helps boost these numbers (and their bonus)
+Discipline of mathematics called Operations Research (OR)
+Started in World War II, comparing resources spent vs enemies destroyed
+The grapes of Wrath (John Steinbeck)
+During the great depression, farmers from California send pamphlets to Oklahoma where thousands of workers are without a job
+They only need a certain number of workers, but the tenfold shows up
+This provides the Californians with very cheap labour
+And famine and starvation among the Okies
+
+It’s a great book, you should read it
+Scheduling
+Starbucks can push an employee to the limit, but not over it
+Replacing them costs money
+But the employee won’t go working for McDonalds, because it’s just as bad over there
+It’s a WMD…
+Opaque: You don’t know why you have to work 16 hours on Monday and none on Thursday, it’s just the way it is (this week, next week is different)
+Scale: It’s widespread among all low-paying jobs (at big corporations)
+Damage: Needing a job like this will affect your personal life
+
+How do you think the schedule is for the people who make “Ordered before 23:59, delivered for free tomorrow” come true?
+We need some data
+Since this course is focused on data, we’ll be creating our own dataset
+If you fill in your favorite color in the assignment on Canvas you’ll get a fitbit next week in that color
+We got a sponsor, so it’s free!
+We’ll all be wearing these and sharing our information with each other
+Sharing all our data
+The rule for getting a free fitbit is that you have to wear it at all times
+When you are sleeping, studying, commuting, eating, watching TV, going on a date, …
+When paired with your results in this (and other) course(s) we’ll be able to answer some interesting questions:
+Is more sleep better for your grades?
+Are we eating healthy?
+Who is working hard and who is only committing to Github?
+What is the average success rate of a date in this group?
+Is dating a lot nefarious for your study results?
+The circle
+The circle is also a book
+A good book actually, pretty unnerving
+You should read it
+The circle is about a company equivalent to google and facebook combined
+They get rich from advertising, but spend money this to improve life for mankind
+I.E. chipping every kid in their bones to make abductions impossible
+The downside being that the chip stays there when they grow up, and the circle knows where everyone is all the time
+But how real is the book?
+Facebook and voting
+Facebook employs researchers that are living the researchers dream
+Not: working with test group
+But: testing stuff on everyone
+A publicly documented experiment: getting people to vote
+Put a button ‘I voted’ on people’s pages
+When it was clicked, this was posted to friends who hadn’t voted, and felt the pear pressure building
+
+Facebook and voting
+Your timeline is generated by an algorithm
+By tweaking this algorithm, they can make sure ‘hard’ news shows up higher on your list
+Mind, Facebook only show this when a friend has posted it first
+But given enough friends, that’s not really a problem
+Facebook experimented with this during the Obama vs Romney
+After the elections, they compared surveys sent to the users
+People wo got more hard news participated more in 3% of the cases
+On 61 million users in the US, that’s a lot of people
+
+J. Robert Oppenheimer
+When you see something that is technically sweet, you go ahead and do it and you argue about what to do about it only after you have had your technical success.That is the way it was with the atomic bomb.
+
+But maybe
+… that last slide is making it look worse than it actually is…

@@ -1,0 +1,346 @@
+NLP Demos
+1
+2
+Encoder-Decoder for Seq2Seq
+3
+Bottleneck in Seq2Seq without Attention
+4
+The final hidden state of the encoder tries to compress the whole input sentence into one fixed-length context vector
+When dealing with long sentences we lose information resulting in an information bottleneck
+Seq2seq with Attention
+5
+6
+Cross-attention introduced a powerfulidea: allowing each token from the output sequence to look at any token from the input sequence to learn the mapping from input to output
+More powerful than the recurrentstructure around it!
+Self-attention allows each token in asequence to look at all other tokensin the same sequence to decide whichones are most relevant for understandingits meaning
+
+From Cross-Attention to Self-Attention
+7
+Each token takes on 3 roles in self-attention:
+Query: What information is thisword looking for? (question)
+Key: What information does thisword contain? (label)
+Value: The actual content that is passed to other words (information)
+Self-attention assigns attention weights(higher for more relevant words)
+The token’s new embedding becomes a weighted combination of all the words it attends to
+
+Self-Attention
+8
+
+
+
+
+
+
+
+
+
+
+
+
+
+Multi-head self-attention replaces recurrence with direct, parallel connections between all words, allowing the model to capture both syntactic and semantic relationships across any distance
+
+Multi-Head Self-Attention
+Transformer is an encoder-decoder architecturefor seq2seq tasks that no longer uses recurrent layers
+Core components are:
+Self-attention operates between source tokens (in the encoder) or between target tokens (in thedecoder) to capture context and meaning for representation learning
+Feedforward layers process each token’s contextualized representation independently and refine and update its meaning using the model’s learned general linguistic knowledge
+Cross-attention operates between each target token and all source tokens to align input and output sequences for task learning
+Transformer Architecture
+9
+10
+The original Transformer was built for seq2seq tasks (like translation), using an encoder–decoder structure with self-attention and cross-attention
+However not all NLP tasks require both components, leading to three main architectural variants:
+Three types of Transformer LLMs
+Pre-training vs Fine-Tuning vs In-Context Learning
+11
+12
+RLHFReinforcement Learning from Human Feedback
+13
+Deep Learning
+Natural Language Processing (NLP)
+Multimodal Transformers
+
+
+
+Lesson Goals
+14
+Vision Transformers: Students can explain how ViTs adapt the Transformer architecture to image data by treating image patches as tokens, describe how self-attention models long-range spatial relationships, and understand why ViTs require large-scale pretraining but offer strong scalability and flexibility compared to CNNs.
+Multimodal Transformers: Students can describe how multimodal Transformers process and integrate information from different modalities, explain how models combine visual and textual inputs to produce joint representations, and compare major architectural approaches such as single-stream models (e.g., VisualBERT), dual-stream models (e.g., ViLBERT), contrastive dual-encoder models (e.g., CLIP), and fusion-generative models (e.g., BLIP, BLIP-2).
+Multimodal Representation Learning: Students will understand how multimodal models learn shared embedding spaces that align visual and textual concepts, explain how self-supervised pretraining objectives support the learning of this alignment, and recognize how such shared spaces enable cross-modal retrieval tasks.
+
+
+15
+Connecting Vision and Language
+		
+
+
+
+Connecting Vision and Language
+16
+Although vision and language seem different, they are two ways of representing the world
+Language describes the world through words, which are discrete and symbolic
+Vision describes the world through pixels, which are continuous and spatial
+
+Connecting Vision and Language
+17
+For a long time, vision and language required very different neural network architectures:
+Vision used CNNsCNNs relied on convolutional filters to capture local patterns (edges, textures, shapes) in images
+Language used RNNs / LSTMsRNNs processed text sequentially, capturing temporal and linguistic dependencies across tokens
+These differences seemed fundamental until the attention mechanism changed everything
+
+Connecting Vision and Language
+18
+Attention can learn relationships between different parts of the input directly
+Not limited by local context (as in RNNs) or local receptive fields (as in CNNs), it can capture dependencies between any two parts of an input, no matter how far apart
+Attention can mimic both convolution and recurrence
+This flexibility removes the architectural constraints of CNNs and RNNs
+Attention scales better than CNNs and RNNs
+Attention processes everything in parallel and captures global context in one step
+Transformers unify processing across vision and language
+
+19
+Vision Transformers
+		
+
+
+
+Words vs. Visual Words
+20
+Words and pixels look very different, yet both describe the same underlying world
+We use words to refer to objects, actions, and attributes 
+In images, these same objects, actions, and attributes appear as contiguous regions of pixels
+We can think of these regions as visual words: patches of the image that play a similar role to tokens in a sentence
+Words vs. Visual Words
+21
+In language, we tokenize text into words or subwords and embed them
+In vision, an image can be divided into fixed-size patches and treated as visual words
+Each patch is flattened and projected into a patch embedding vector, just like a word embedding
+The visual words become the input of the Vision Transformer so images are processed as sequences of patch embeddings
+Positional encodings inject spatial order
+A learnable [CLS] token summarizes the entire image, just like in BERT
+
+
+
+Vision Transformers (ViT)Patches, Position Embeddings, CLS token
+22
+Positional embeddings helppreserve spatial structure
+Final embedding of [CLS] token becomes theimage-level representation used for classification
+Vision Transformers (ViTs)Architecture
+23
+Vision Transformers (ViTs)Architecture
+24
+A Vision Transformer is an encoder-only Transformer
+Self-attention layers allow every patch to attend to every other patch, capturing global relationships across the image
+A feedforward network refines each patch representation
+A final MLP classification head uses the CLS token (which aggregates information from all patches) to predict the image class
+
+Vision Transformers (ViTs)Training and Performance
+25
+CNNs have strong inductive biases (local patterns, translation invariance), making them data-efficient
+ViTs lack these biases and must learn visual structure from scratch
+Therefore, ViTs require large datasets, or strong regularization, or large-scale pretraining
+
+Self-attention is not limited to local receptive fields, so ViTs can model global spatial relationships from the first layer
+They generalize well across different tasks
+Their performance improves rapidly as model and dataset sizes increase, and at large scale they surpass CNNs
+26
+Multimodal Transformers
+		
+
+
+
+Multimodal Transformers
+27
+Transformers that process text tokens learn linguistic relations through multi-head self-attention, forming a latent embedding space where geometry reflects semantic similarity
+Vision Transformers use multi-head self-attention to learn spatial relations between image patches, producing a latent embedding space that captures visual semantic similarity
+Since both vision and language describe the same underlying world (i.e. objects, actions, and attributes) there are meaningful relations between text tokens and image patches as well
+Because Transformers can process both word tokens and image patch tokens, nothing prevents us from feeding them together into a shared model
+
+Multimodal Transformers
+28
+Multimodality means integrating or combining information from multiple sources or sensory modalities
+Common modalities include text, images, audio, video, and sensor data
+Multimodal Transformers combine modalities (e.g., vision and language) and learn:
+Modality-specific representations such as patch embeddings and token embeddings
+A shared or aligned representation space that aligns semantically related text tokens and image patches
+Cross-modal reasoning which supports multimodal tasks
+Multimodal Representation Learning
+29
+
+
+
+Multimodal representation learningis the process of mapping differentmodalities (e.g., text and images) into a shared embedding space sothat semantically related elements from each modality are close together
+
+Cross-modal Retrieval
+30
+Cross-modal retrieval means using
+an image to find relevant texts(image-to-text retrieval) 
+a text to find relevant images(text-to-image retrieval) 
+It requires the model to learn consistent, comparable embeddings across modalities
+
+
+ViLBERTVision-and-Language BERT
+31
+Multimodal Transformers need mechanisms that let text and images interact with each other
+ViLBERT achieves this by using two Transformer streams: one for vision and one for language
+These streams are connected through co-attention layers, enabling deep cross-modal alignment
+ViLBERTInput
+32
+A tokenizer is used to split sentences into subwords which are then converted into token embeddings or text tokens
+Faster R-CNN is used to obtain bounding boxes around meaningful object regions and extract region-level embeddings. These region embeddings are then treated as visual tokens
+ViLBERTArchitecture
+33
+ViLBERTArchitecture
+34
+Two separate Transformer encoders:
+One for processing text tokens
+One for processing image patches
+Co-attention (bidirectional cross-attention) layers, which enable:
+Token embeddings to attend to patch embeddings at varying representation depths
+Patch embeddings to attend to token embeddings at varying representation depths
+This architecture allows the model to learn rich interactions between the two modalities while keeping each encoder specialized
+
+ViLBERTTwo pretraining objectives
+35
+ViLBERT is pretrained with two self-supervised objectives: 
+Masked multimodal learning (predicting masked text and regions using both modalities)
+Multimodal alignment (determining whether text and images correspond)
+ViLBERTPretraining and finetuning
+36
+During pre-training, we learn general, task-agnostic multimodal embeddings from a large-scale image–text dataset
+Conceptual Captions is a collection of ~3 million of image-caption pairs automatically derived from alt-text enabled web images
+Large-scale data is needed for several reasons:
+ViTs have weaker inductive biases.
+Multimodal alignment requires broad visual and linguistic coverage
+
+Afterwards, the learned embeddings can be fine-tuned on a smaller labeled dataset to adapt them to specific downstream tasks efficiently such as visual question answering or image captioning
+
+VisualBERT
+37
+VisualBERT is another multimodal Transformer that integrates vision and language, but it follows a simpler and more unified architecture than ViLBERT
+
+VisualBERT uses a single Transformer stream in which text tokens and visual tokens are concatenated into one sequence and processed jointly
+
+Because all tokens share the same Transformer, the model learns cross-modal interactions implicitly through self-attention
+
+
+Text tokens and visual tokens are concatenated into one sequence and cross-modal interactions are learned through self-attention
+
+
+
+
+
+
+
+
+
+
+
+
+VisualBERT is pretrained using:
+Masked language modeling with image context
+Vision–language matching to determine whether an image and caption correspond
+
+VisualBERTArchitecture and Pretraining objectives
+38
+Conceptual Captions Dataset
+39
+A curated dataset of ~3 million image–caption pairs
+Captions are derived from web alt-text but cleaned, filtered, and transformed into more natural-sounding descriptions
+Contains high-quality but relatively short captions focusing on what is visually present
+Structured dataset but limited in diversity
+
+Conceptual Captions Dataset
+40
+CLIPContrastive Language-Image Pretraining
+41
+Earlier multimodal models (ViLBERT, VisualBERT) combine vision and language inside the Transformer
+They depend heavily on region-level object detectors (Faster R-CNN) and specialized multimodal architectures
+CLIP introduces a new paradigm: a contrastive dual-encoder model
+Two separate encoders, one for images and one for texts
+Image-text alignment through a contrastive objective outside the Transformer, not through joint attention
+Trained on massive web-scale datasets
+
+CLIP produces a highly general, flexible multimodal representation used for zero-shot classification and retrieval
+
+CLIPDual-encoder
+42
+CLIPContrastive pretraining
+43
+Contrastive pretraining trains a model to pull together embeddings of matching pairs (e.g., an image and its caption) and push apart embeddings of non-matching pairs, creating a discriminative and semantically organized multimodal embedding space
+CLIPContrastive pretraining and Zero-shot prediction
+44
+WebImageText Dataset
+45
+A massive web-scale dataset gathered by scraping 400 million image–text pairs from the internet
+Captions can be messy, noisy, and highly variable (tweets, titles, alt-text, descriptions, comments, etc.)
+Extremely diverse in topics, styles, domains, and quality
+Not manually cleaned
+BLIPBootstrapping Language–Image Pretraining
+46
+CLIP introduced a powerful idea:Train separate image and text encoders on massive web data using contrastive learning, so that images and captions align in a shared embedding space
+
+CLIP is excellent at multimodal tasks that require image understanding such as retrieval, zero-shot classification and image-text matching
+
+CLIP cannot generate language about images, so it cannot perform tasks like image captioning or visual question answering
+BLIP can understand and generate language about images by fusing visual features into an image-grounded text encoder for cross-modal alignment and using an image-grounded text decoder for captioning
+BLIPArchitecture
+47
+Unimodal Encoders that encode each modality on its own
+The image encoder  turns the image into patch embeddings
+The text encoder turns text into token embeddings
+Image-grounded Text Encoder that grounds words in specific parts of the image for understanding
+It uses cross-attention so that each text token can look at relevant patches
+Image-grounded Text Decoder that grounds words in specific parts of the image for generation
+At each step, cross-attention lets the decoder produce captions by looking at the relevant parts of the image as it generates each word
+It uses causal or masked self-attention so generation flows left-to-right
+
+
+
+BLIPArchitecture
+48
+BLIPPretraining objectives
+49
+
+
+BLIP introduces three complementary pretraining objectives, enabling both alignment and generation:
+Image–Text Contrastive Learning (ITC) which learns a shared embedding space by pulling matched image–text pairs together and pushing mismatched ones apart
+Image–Text Matching (ITM) helps the model learn to classify whether a given image and text match which strengthens cross-modal alignment
+Image Captioning (LM)  through which the model learns to generate a caption conditioned on an image and become good at image-to-text generation
+
+
+
+
+
+BLIP-2
+50
+BLIP can understand and generate text about images, but it cannot easily use existing LLMs because connecting vision to an LLM normally requires expensive retraining
+
+BLIP-2 provides a cheap and efficient way to give an LLM visual understanding without retraining the LLM
+It uses a small bridging module that translates visual information into a form an LLM can understand
+The LLM stays frozen but can now answer questions about images or describe them
+BLIP-2 showed that vision can be added on top of existing LLMs, inspiring models like GPT-4, Gemini, and LLaVA
+
+51
+Exam Info
+		
+
+
+
+Exam info(more information will be published on Canvas)
+52
+PE challenges (60%)
+No retake possible
+
+Exam (40%)
+Proctorio-based, closed book, @campus exam!
+Max. 2 hours (inclusive)
+
+Question types:
+Open questions (15%)
+Multiple choice, fill-in-the-blanks, connect the description to the concept (25%)
+No correction for guessing
+
+53
+

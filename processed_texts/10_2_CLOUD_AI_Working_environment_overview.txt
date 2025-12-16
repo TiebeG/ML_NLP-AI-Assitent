@@ -1,0 +1,253 @@
+Chapter 3 – Working environment overview
+Artificial Intelligence
+How to AI?
+We’ll be using Python for AI
+Why?
+
+2
+How to AI?
+To do AI, you need libraries
+These all exist for Python, and are well maintained, mostly open source and extensively documented
+Also, everyone is using Python these days, so why shouldn’t we?
+But there are a number of ways in which to use Python:
+Anaconda
+Anaconda in Docker
+Plain Python and pip
+Virtual Environments
+The cloud (aka Colab)
+
+
+
+3
+Disclaimer
+The following is, at times, quite a confusing slide-deck. That is because it explains many ways of solving the same problem.
+
+The goal is to provide an overview of what is possible. You may encounter any of these solutions in the wild. They all have their benefits.
+
+At the end there will be another file explaining what you actually need to install.
+
+4
+We need notebooks
+Notebooks mix code and markdown-style text. This isn’t just good when creating course-material, it’s also very nice when doing AI for yourself (because you can easily document all your attempts).
+
+You can run these in VSCode, or in PyCharm, run them from a virtual environment or from Anaconda, …
+
+5
+What is Anaconda
+Anaconda is actually a package manager for Python, helping you to [un]install libraries and update them. But Anaconda is also a gui-program that you can install. In these slides, we'll usually refer to the Gui when we say "Anaconda".
+
+Anaconda (the gui) used to be the industry default for Data science. Everyone used it, so it must be good. Installation was(/is) pretty straightforward too...
+
+Positives
+Easy to install
+Has all the good libraries installed by default
+Packages are verified (not the case when using PIP)
+Negatives
+Takes over your Python-installation, forcing you to always use anaconda
+
+6
+Anaconda in the past tense?
+Anaconda pre-installed a lot of the libraries (pandas, numpy, Jupyter), which is easy for beginners
+It also provided an easy way to get Jupyter notebooks running before VSCode existed
+But it didn’t use the default virtual environments and in stead used conda, which also worked but it was a new tool to learn
+It’s still used in some organizations (research) but a less than before
+7
+Visual Studio Code
+VSCode is an IDE Microsoft made a couple of years ago. The idea was to create an open-source IDE that could be used for any programming language on any system.
+
+And they succeeded. 
+
+8
+What is docker?
+This is.	(There are non-MS-explanations, but this one nicely covers the basics.)
+
+What is Docker?
+
+Docker is an open-source project for automating the deployment of applications as
+portable, self-sufficient containers that can run on the cloud or on-premises. Docker is
+also a company that promotes and evolves this technology, working in collaboration
+with cloud, Linux, and Windows vendors.
+
+Why use docker?
+
+Because there's a ready-made Anaconda container that simply works
+
+9
+Plusminus
+Positives
+
+Very easy to install
+Doesn't take over your local Python-installation
+Also has all the good libraries installed by default
+
+Negatives
+
+Requires an extra layer on your system
+But only on Windows, in Linux, it's really fluent
+A bit more work to install additional libraries
+
+10
+Anaconda in docker on a server (-cluster)
+Positives
+
+Doesn't use any processing power on your laptop
+Everyone uses the same dev-environment
+Really easy to deploy to racks with a lot of computing power
+
+Negatives
+
+You need server infrastructure (and a devops engineer) for that
+
+11
+Installation
+Install Linux
+Install Docker
+
+When you run docker in windows it automatically installs the Windows Subsystem for Linux (WSL) and installs docker in there. It works nicely.
+
+Anyway, after installing docker:
+
+Run docker pull jupyter/datascience-notebook
+Run docker run -it --rm -p 8888:8888 jupyter/datascience-notebook
+
+12
+Installing everything separately
+First you download and install Python
+Next, you install VSCode
+Open a folder in VSCode and  create a virtual environment
+Now start using a Jupyter notebook and install all libraries you need using! or %
+13
+Why?
+Positives
+Very rigorous control over what get's installed and what not
+Use your favorite IDE to do AI
+Lightweight setup, easily reproducible to github or a server
+
+Negatives
+
+(A bit) more work to get everything installed and cooperating
+
+14
+And Jupyter?
+You can create a notebook in VSCode, but you can also work on a notebook in a browser.
+
+You can install Jupyter as a library in Python (using pip) and run it. It wil automatically open a browser…
+
+https://jupyter.org/install
+
+
+15
+Why use a virtual environment?
+The problem:
+
+You wrote some code half a year ago, updated Anaconda (or your libraries) and now the code doesn't work anymore because the libraries have become better (which is good), but they also changed some function-calls.
+
+The solution:
+
+You create a virtual environment with this Python and that library and store your project inside of that environment. When the project is done, you save the entire environment in a folder that you can reuse later on, with all the libraries in the versions you need.
+
+16
+Example
+The first worked in Python 2 but doesn't in Python 3. Code you wrote many years ago without brackets won't work anymore.
+
+But you want that code to work, even though it's built on older technology and relies on libraries that have been proven to be inefficient or unsafe.
+
+17
+print "hello world"
+print("hello world")
+Unsafe?
+Yes, using older, not-updated libraries can be unsafe.
+
+Yet we're not writing a new banking-App, but extracting data from files and reforming it, so working-but-not-so-safe-code is better than not-working-code.
+
+And you're aware of the fact that you are using an old version, so every time you start a new project, you create a new environment with updated libraries and work in that environment.
+
+18
+Using virtual environments in Python
+Using virtual environments in Python is a great way of keeping a project “in working condition” and also of not installing all libraries in the basic Python-interpreter.
+
+Create a new folder
+Open VSCode in that folder (File – open folder)
+In terminal, type
+python -m venv venv
+venv/Scripts/activate
+The prompt changes to “(foldername) c:\...”
+
+
+
+19
+Do we need venv in docker?
+No, when using anaconda (or Jupyter) in docker, we simply use one container per project. The Dockerfile will take care of installing the requirements. When it needs training move it over to the Kubernetes-cluster with massive GPU, when no longer working on it, store in Github.
+
+Github, by the way: setup a continuous integration-pipeline (the CI in CI/CD) to use the same environment with dozens of developers. Works great…
+
+20
+Saving a virtual environment
+When uploading a project to github, you never upload the venv-folder
+It contains way too many files that are downloaded from the internet
+In stead, you export the contents of “pip freeze” to a file (“requirements.txt”)
+Pip freeze > requirements.txt
+Then you push it to github and when you clone it, install the libraries in the file
+Pip install –r requirements.txt
+Beware: freezing is a picture taken at a certain time, it doesn’t follow installation of new libraries
+21
+colab.research.google.com
+Google hosts a cluster of computers (a rather large one) and you can use some of that compute to run Python-code. It’s a zero-setup way of doing data science or AI.
+
+It integrates with your google drive, which makes it easy to upload and download existing files. You can also share files this way, or even use github.
+
+
+22
+Running code
+Plain Python, use pip for libraries
+Install Anaconda
+Install Jupyter notebooks
+
+Run Jupyter in a webbrowser (Anaconda or Jupyter)
+Or use VSCode (plain Python or Anaconda)
+
+Always use virtual environments
+Consider using Github
+When working with more than one developer: always use Github (or gitlab)
+
+23
+Or maybe?
+Shouldn’t we be looking into Julia, since it’s newer
+And therefore, by definition, cooler
+When switching to Julia might be a good idea:
+Performance is a bottleneck: Julia’s just-in-time (JIT) compilation can significantly outperform Python in computationally heavy tasks
+You're doing a lot of numerical computing or scientific ML: Julia was designed for numerical work and is strong in scientific computing, differential equations, and modeling
+You want a cleaner “one-language” workflow: Unlike Python (which mixes with C/C++/Fortran under the hood for speed), Julia lets you write high-performance code directly without leaving the language
+24
+Or maybe?
+Shouldn’t we be looking into Julia, since it’s newer
+And therefore, by definition, cooler
+When not to switch:
+You're already productive in Python: Python has mature ML libraries (e.g., scikit-learn, PyTorch, TensorFlow, XGBoost) and a huge community. Switching means losing access to some of that maturity, unless you can interop with Python via PyCall.
+You use a lot of prebuilt ML tools: Julia's ML ecosystem (e.g., Flux.jl, MLJ.jl) is growing but still behind Python in terms of documentation, tutorials, and robustness.
+You collaborate with others: Python is the standard in most research and industry ML workflows. Introducing Julia may cause friction unless your team is on board.
+25
+Addendum: Streamlit
+Jupyter is great for a data scientist who knows how to run data, but it doesn’t present very well
+It’s also not ideal for interaction: to change the input you have to tinker with variables
+Streamlit fixes this, it creates a webpage based on python code that dynamically generates graphs from the input parameters
+26
+Streamlit
+Give it a spin:
+https://streamlit.io/playground
+(Trying it out without even installing Python)
+
+Install using “pip install streamlit”
+In a venv!
+Run using “streamlit hello”
+Next, go through the notebook called “2 - Streamlit 101.ipynb”
+It builds the graphs we’ll be putting in the streamlit app
+And finally build (and understand, as you’ll have to build the next one yourself)
+27
+How to continue?
+Check if the setup you used last year in the Data Science course still works.
+
+If it doesn’t, use the other PowerPoint (1.4) to install everything again.
+
+If it does, add github (for the team project).
+28

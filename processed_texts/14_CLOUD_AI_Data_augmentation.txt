@@ -1,0 +1,713 @@
+Chapter 7 – Data augmentation
+Artificial Intelligence
+Data science
+You can’t do machine learning without doing data science first
+Data science means wrangling your data into a form you can use it in
+Because any real data will never be useable in its raw form, you’ll need to clean it up, cut of the bad parts, …
+In a way, machine learning is part of data science, because a good model can help you understand your data
+Like what we did with the diamonds earlier
+2
+The overlap
+3
+The data science process
+4
+The data science life cycle involves various roles, tools, and processes, which enables analysts to gain actionable insights. Typically, a data science project undergoes the following stages:
+Step 1: Obtain
+Query databases
+Read Excel-files
+Call API’s
+Read CSV’s
+…
+
+Get and combine the data from anywhere you can
+But: only use properly governed data
+More is not better when more means less reliable
+
+5
+Step 1: Obtain
+We’ve been storing huge amounts of data the past few years, but this data isn’t always publicly available
+For example: a student internship was “scrape all the price data for holiday parks, so our client can use this data to better position themselves in the market.”
+Very nice dataset by the way.
+This process is called “scraping” and it’s really fun
+It’s like a sudoku but with data and programming
+Assignment for students in the data science course:Scrape multi-stage bike races and compare them
+
+
+6
+Step 2: Scrub
+Are all dates recognized as dates?
+Are all numbers recognized as numbers?
+Is the information of different files correctly merged?
+Does every datapoint translate to a single piece of information?
+National Insurance Number: date of birth and gender
+Street name and number: Split? Merge?
+Are there missing values? How will you deal with them?
+Amputation/imputation will be a big thing later in this presentation
+
+7
+Step 2: Scrub
+Sometimes it feels like the easiest way of dealing with dates is simply storing “year”, “month” and “day” in a different variable (or field or…)
+But your gut feeling is wrong: you should always use the correct datetime-datatypes
+There are many, and for every language
+
+
+
+And using them is always annoying in the beginning, but in the end it’s the only real viable option
+8
+Step 3: Explore
+Try to make sense of all available data
+Create some graphs, examine the distribution of all variables
+Are there correlations between the data? Should there be?
+High blood pressure in relation to height and weight
+Do not assume causation!
+If needed, go back to “Scrub”
+Identify and label categorical data
+Merge or split datapoints
+Deal with outliers
+Also: talk to the domain experts
+9
+Step 3: Explore
+At this point you’ll also be needing a domain expert
+With domain knowledge, you can begin to determine the features and target data that your model needs to make accurate predictions
+Your data should be representative of the data that you are going to have when you use the model to make a prediction
+They help you understand which fields are important and which not, which outliers are safe to throw away, how data can be imputed, …
+
+10
+Step 4: Model data
+Create models that can explain or predict based upon the data you have imported
+Classify using logistic regression
+Predict using linear regression
+Cluster using k-means or hierarchical clustering
+
+
+
+(What we did in the previous chapter)
+11
+Step 5: Interpret the data
+The ultimate goal of every data science-project
+Test how the models we made generalize
+Explain our findings to a non-domain specialist
+Answer the questions we posed in the beginning
+Do heavier cars always consume more gas?
+In which season are there more insect-bites?
+Tell a story using the data you were given.
+12
+Summing up
+13
+[Stolen from R]
+Disclaimer: Sometimes we reuse slides
+The following slides were reused from the course “Data science in R”
+R is a very good language for statistics and it interacts really well with BI-tools
+They’re being used by the same type of people
+Programming in R is strange though
+They explain when data is “tidy”, which is a big thing in R
+We don’t have such a concept in Python,but we should (and at the very least be aware of it)
+
+14
+Same data, different formats
+15
+  country      year  cases population
+  <chr>       <int>  <int>      <int>
+1 Afghanistan  1999    745   19987071
+2 Afghanistan  2000   2666   20595360
+3 Brazil       1999  37737  172006362
+4 Brazil       2000  80488  174504898
+5 China        1999 212258 1272915272
+6 China        2000 213766 1280428583
+   country      year type            count
+   <chr>       <int> <chr>           <int>
+ 1 Afghanistan  1999 cases             745
+ 2 Afghanistan  1999 population   19987071
+ 3 Afghanistan  2000 cases            2666
+ 4 Afghanistan  2000 population   20595360
+ 5 Brazil       1999 cases           37737
+ 6 Brazil       1999 population  172006362
+ 7 Brazil       2000 cases           80488
+ 8 Brazil       2000 population  174504898
+ 9 China        1999 cases          212258
+10 China        1999 population 1272915272
+11 China        2000 cases          213766
+12 China        2000 population 1280428583
+  country      year rate             
+* <chr>       <int> <chr>            
+1 Afghanistan  1999 745/19987071     
+2 Afghanistan  2000 2666/20595360    
+3 Brazil       1999 37737/172006362  
+4 Brazil       2000 80488/174504898  
+5 China        1999 212258/1272915272
+6 China        2000 213766/1280428583
+  country     `1999` `2000`
+* <chr>        <int>  <int>
+1 Afghanistan    745   2666
+2 Brazil       37737  80488
+3 China       212258 213766
+  country         `1999`     `2000`
+* <chr>            <int>      <int>
+1 Afghanistan   19987071   20595360
+2 Brazil       172006362  174504898
+3 China       1272915272 1280428583
+1
+2
+3
+4
+3 rules for data files
+Each variable must have its own column.
+Each observation must have its own row.
+Each value must have its own cell.
+16
+Does each variable have its own column?
+17
+  country      year  cases population
+  <chr>       <int>  <int>      <int>
+1 Afghanistan  1999    745   19987071
+2 Afghanistan  2000   2666   20595360
+3 Brazil       1999  37737  172006362
+4 Brazil       2000  80488  174504898
+5 China        1999 212258 1272915272
+6 China        2000 213766 1280428583
+   country      year type            count
+   <chr>       <int> <chr>           <int>
+ 1 Afghanistan  1999 cases             745
+ 2 Afghanistan  1999 population   19987071
+ 3 Afghanistan  2000 cases            2666
+ 4 Afghanistan  2000 population   20595360
+ 5 Brazil       1999 cases           37737
+ 6 Brazil       1999 population  172006362
+ 7 Brazil       2000 cases           80488
+ 8 Brazil       2000 population  174504898
+ 9 China        1999 cases          212258
+10 China        1999 population 1272915272
+11 China        2000 cases          213766
+12 China        2000 population 1280428583
+  country      year rate             
+* <chr>       <int> <chr>            
+1 Afghanistan  1999 745/19987071     
+2 Afghanistan  2000 2666/20595360    
+3 Brazil       1999 37737/172006362  
+4 Brazil       2000 80488/174504898  
+5 China        1999 212258/1272915272
+6 China        2000 213766/1280428583
+  country     `1999` `2000`
+* <chr>        <int>  <int>
+1 Afghanistan    745   2666
+2 Brazil       37737  80488
+3 China       212258 213766
+  country         `1999`     `2000`
+* <chr>            <int>      <int>
+1 Afghanistan   19987071   20595360
+2 Brazil       172006362  174504898
+3 China       1272915272 1280428583
+1
+2
+3
+4
+Each variable must have its own column
+
+
+
+
+18
+
+
+
+
+
+
+
+
+
+
+
+  country      year  cases population
+  <chr>       <int>  <int>      <int>
+1 Afghanistan  1999    745   19987071
+2 Afghanistan  2000   2666   20595360
+3 Brazil       1999  37737  172006362
+4 Brazil       2000  80488  174504898
+5 China        1999 212258 1272915272
+6 China        2000 213766 1280428583
+   country      year type            count
+   <chr>       <int> <chr>           <int>
+ 1 Afghanistan  1999 cases             745
+ 2 Afghanistan  1999 population   19987071
+ 3 Afghanistan  2000 cases            2666
+ 4 Afghanistan  2000 population   20595360
+ 5 Brazil       1999 cases           37737
+ 6 Brazil       1999 population  172006362
+ 7 Brazil       2000 cases           80488
+ 8 Brazil       2000 population  174504898
+ 9 China        1999 cases          212258
+10 China        1999 population 1272915272
+11 China        2000 cases          213766
+12 China        2000 population 1280428583
+  country      year rate             
+* <chr>       <int> <chr>            
+1 Afghanistan  1999 745/19987071     
+2 Afghanistan  2000 2666/20595360    
+3 Brazil       1999 37737/172006362  
+4 Brazil       2000 80488/174504898  
+5 China        1999 212258/1272915272
+6 China        2000 213766/1280428583
+  country     `1999` `2000`
+* <chr>        <int>  <int>
+1 Afghanistan    745   2666
+2 Brazil       37737  80488
+3 China       212258 213766
+  country         `1999`     `2000`
+* <chr>            <int>      <int>
+1 Afghanistan   19987071   20595360
+2 Brazil       172006362  174504898
+3 China       1272915272 1280428583
+One column contains two variables
+1999 and 2000 are not variables, they are values!
+type and count are no true variables (= characteristics of the observation object)
+Does each observation have its own row?
+19
+  country      year  cases population
+  <chr>       <int>  <int>      <int>
+1 Afghanistan  1999    745   19987071
+2 Afghanistan  2000   2666   20595360
+3 Brazil       1999  37737  172006362
+4 Brazil       2000  80488  174504898
+5 China        1999 212258 1272915272
+6 China        2000 213766 1280428583
+   country      year type            count
+   <chr>       <int> <chr>           <int>
+ 1 Afghanistan  1999 cases             745
+ 2 Afghanistan  1999 population   19987071
+ 3 Afghanistan  2000 cases            2666
+ 4 Afghanistan  2000 population   20595360
+ 5 Brazil       1999 cases           37737
+ 6 Brazil       1999 population  172006362
+ 7 Brazil       2000 cases           80488
+ 8 Brazil       2000 population  174504898
+ 9 China        1999 cases          212258
+10 China        1999 population 1272915272
+11 China        2000 cases          213766
+12 China        2000 population 1280428583
+  country      year rate             
+* <chr>       <int> <chr>            
+1 Afghanistan  1999 745/19987071     
+2 Afghanistan  2000 2666/20595360    
+3 Brazil       1999 37737/172006362  
+4 Brazil       2000 80488/174504898  
+5 China        1999 212258/1272915272
+6 China        2000 213766/1280428583
+  country     `1999` `2000`
+* <chr>        <int>  <int>
+1 Afghanistan    745   2666
+2 Brazil       37737  80488
+3 China       212258 213766
+  country         `1999`     `2000`
+* <chr>            <int>      <int>
+1 Afghanistan   19987071   20595360
+2 Brazil       172006362  174504898
+3 China       1272915272 1280428583
+1
+2
+3
+4
+Each observation must have its own row
+20
+
+
+
+
+
+
+
+
+
+
+
+  country      year  cases population
+  <chr>       <int>  <int>      <int>
+1 Afghanistan  1999    745   19987071
+2 Afghanistan  2000   2666   20595360
+3 Brazil       1999  37737  172006362
+4 Brazil       2000  80488  174504898
+5 China        1999 212258 1272915272
+6 China        2000 213766 1280428583
+   country      year type            count
+   <chr>       <int> <chr>           <int>
+ 1 Afghanistan  1999 cases             745
+ 2 Afghanistan  1999 population   19987071
+ 3 Afghanistan  2000 cases            2666
+ 4 Afghanistan  2000 population   20595360
+ 5 Brazil       1999 cases           37737
+ 6 Brazil       1999 population  172006362
+ 7 Brazil       2000 cases           80488
+ 8 Brazil       2000 population  174504898
+ 9 China        1999 cases          212258
+10 China        1999 population 1272915272
+11 China        2000 cases          213766
+12 China        2000 population 1280428583
+  country      year rate             
+* <chr>       <int> <chr>            
+1 Afghanistan  1999 745/19987071     
+2 Afghanistan  2000 2666/20595360    
+3 Brazil       1999 37737/172006362  
+4 Brazil       2000 80488/174504898  
+5 China        1999 212258/1272915272
+6 China        2000 213766/1280428583
+  country     `1999` `2000`
+* <chr>        <int>  <int>
+1 Afghanistan    745   2666
+2 Brazil       37737  80488
+3 China       212258 213766
+  country         `1999`     `2000`
+* <chr>            <int>      <int>
+1 Afghanistan   19987071   20595360
+2 Brazil       172006362  174504898
+3 China       1272915272 1280428583
+Observations spread across two tables
+2 rows per observation
+Does each value have its own cell?
+21
+  country      year  cases population
+  <chr>       <int>  <int>      <int>
+1 Afghanistan  1999    745   19987071
+2 Afghanistan  2000   2666   20595360
+3 Brazil       1999  37737  172006362
+4 Brazil       2000  80488  174504898
+5 China        1999 212258 1272915272
+6 China        2000 213766 1280428583
+   country      year type            count
+   <chr>       <int> <chr>           <int>
+ 1 Afghanistan  1999 cases             745
+ 2 Afghanistan  1999 population   19987071
+ 3 Afghanistan  2000 cases            2666
+ 4 Afghanistan  2000 population   20595360
+ 5 Brazil       1999 cases           37737
+ 6 Brazil       1999 population  172006362
+ 7 Brazil       2000 cases           80488
+ 8 Brazil       2000 population  174504898
+ 9 China        1999 cases          212258
+10 China        1999 population 1272915272
+11 China        2000 cases          213766
+12 China        2000 population 1280428583
+  country      year rate             
+* <chr>       <int> <chr>            
+1 Afghanistan  1999 745/19987071     
+2 Afghanistan  2000 2666/20595360    
+3 Brazil       1999 37737/172006362  
+4 Brazil       2000 80488/174504898  
+5 China        1999 212258/1272915272
+6 China        2000 213766/1280428583
+  country     `1999` `2000`
+* <chr>        <int>  <int>
+1 Afghanistan    745   2666
+2 Brazil       37737  80488
+3 China       212258 213766
+  country         `1999`     `2000`
+* <chr>            <int>      <int>
+1 Afghanistan   19987071   20595360
+2 Brazil       172006362  174504898
+3 China       1272915272 1280428583
+1
+2
+3
+4
+Each value must have its own cell
+22
+
+
+
+
+
+
+
+
+
+
+
+  country      year  cases population
+  <chr>       <int>  <int>      <int>
+1 Afghanistan  1999    745   19987071
+2 Afghanistan  2000   2666   20595360
+3 Brazil       1999  37737  172006362
+4 Brazil       2000  80488  174504898
+5 China        1999 212258 1272915272
+6 China        2000 213766 1280428583
+   country      year type            count
+   <chr>       <int> <chr>           <int>
+ 1 Afghanistan  1999 cases             745
+ 2 Afghanistan  1999 population   19987071
+ 3 Afghanistan  2000 cases            2666
+ 4 Afghanistan  2000 population   20595360
+ 5 Brazil       1999 cases           37737
+ 6 Brazil       1999 population  172006362
+ 7 Brazil       2000 cases           80488
+ 8 Brazil       2000 population  174504898
+ 9 China        1999 cases          212258
+10 China        1999 population 1272915272
+11 China        2000 cases          213766
+12 China        2000 population 1280428583
+  country      year rate             
+* <chr>       <int> <chr>            
+1 Afghanistan  1999 745/19987071     
+2 Afghanistan  2000 2666/20595360    
+3 Brazil       1999 37737/172006362  
+4 Brazil       2000 80488/174504898  
+5 China        1999 212258/1272915272
+6 China        2000 213766/1280428583
+  country     `1999` `2000`
+* <chr>        <int>  <int>
+1 Afghanistan    745   2666
+2 Brazil       37737  80488
+3 China       212258 213766
+  country         `1999`     `2000`
+* <chr>            <int>      <int>
+1 Afghanistan   19987071   20595360
+2 Brazil       172006362  174504898
+3 China       1272915272 1280428583
+One cell contains two values
+Problems in data
+The data you get will have issues
+Contains outliers
+Ordinal and nominal (important to figure out)
+Contains missing values
+Has bias
+
+
+Outliers
+Outliers are observations or data points that significantly deviate from the rest of the data, extreme values that are distinctively different from the majority of the dataset
+Measurement errors
+Data corruption
+Genuinely unusual observations
+Can distort the results of statistical analyses, leading to incorrect conclusions or misleading interpretations
+24
+Outliers
+This is the histogram for the Y-size of about 50.000 diamonds
+All are between 3 and 10 mm, but why is the graph so big?
+Because there is one diamond in the set with a Y-value of around 60
+For reference: the biggest diamond in the world is 10x6 cm
+This diamond’s price is $12k
+(Something is wrong there)
+
+25
+Outliers
+
+
+Outliers can be seen in histograms, but box-plots are easier
+The green line is the median, the outside of the box is the q1 and q3
+25% of data is below the q1-value (quartile 1)
+The median (q2) is the center value
+IQR = q3 – q1
+Outliers:
+Below q1 – 1.5 x IQR
+Above q3 + 1.5 x IQR
+
+26
+Where the lines end!
+Outliers
+IQR: Inter quartile range
+Range between q1 and q3
+Unaffected by extreme outliers
+Standard deviation:
+Average distance to the mean
+Is affected by extreme outliers
+You could calculate outliers using	average ± 3 x standard deviation
+
+
+27
+Outliers: how to handle
+Removing outliers: easiest, but also quite harsh
+Transformation: if the data is logarithmic you should transform it, the outliers may not seem so outlierly after all
+Winsorization or clipping: capping the extreme values at a predefined threshold
+Creating separate models: outliers may represent a distinct subset of data that requires separate modeling or analysis. Create a separate models for these datapoints
+28
+Data skewing
+Not a problem to fix, but interesting none the less
+Median = average: normal distribution
+There were some students who didn't get it, and they got bad grades
+Most students got a mediocre value, they make up the bulk of grades
+Some students managed to excel, getting really high grades
+Median > average
+Test was to easy, almost everybody got good grades
+Average > median
+Test was to hard, only the whizz-kids got good grades
+
+29
+Data skewing
+Examples of negative (left) skewing
+Age of retirement (most people retire around 65, a few much earlier).
+Distances of long olympic long jump
+Age of dying
+Examples of positive (right) skewing
+Income
+Housing prices
+Hospital stay duration
+Amount of pets people own
+
+30
+Categorical data
+Gender: Categorized as male or female.
+Marital Status: Categorized as single, married, divorced, widowed, etc.
+Educational Level: Categorized as high school, college, graduate degree, etc.
+Hair Color: Categorized as black, brown, blonde, red, etc.
+Vehicle Type: Categorized as car, truck, motorcycle, bicycle, etc.
+Cannot be subjected to numerical operations or calculations, such as addition or multiplication
+Use chi-square tests, contingency tables, and frequency distributions
+31
+Ordinal and nominal
+Ordinal: the fields have an order
+T-shirt sizes, ratings, education level, …
+The intervals between categories may not be uniform or measurable
+Nominal: no inherent order or ranking
+Gender, colors, marital status, types of fruit, …
+Each category is distinct and does not have any relative position or hierarchy
+
+32
+One hot encoding
+Suppose we have 3 types of fruit (apple, banana and orange)
+If we store “1” for apple, “2” for banana and “3” for orange, a model may treat this as a numerical value
+An orange is worth three apples
+This is wrong, but the model will train upon this
+Solution: three columns (called apple, banana and orange)
+Every row gets a one in the correct column and zero in the others
+Pro: an apple isn’t less or more than an orange anymore
+Con: increase of dimensionality (and memory-requirements for models)
+33
+Missing values
+Not all data is always known
+There can be many reasons for this:
+Never measured
+Can be calculated
+Wrongly stored
+You’ll need a domain expert for most of the solutions to this problem
+34
+Missing values: Amputation
+Easiest solution is simply deleting the data
+The row
+A record that has to much missing data
+Note: you also delete the data you do have
+The column
+One measurement that won’t help in the models
+Note: again, you also delete the data you do have
+Amputation is often the safest way of dealing with outliers, especially if you don’t have too much actual data in the row
+Outliers: always delete the row, never the column
+
+35
+Missing values: Imputing
+Sometimes you can make a good guess on what the value should be
+Based only on the column itself
+Mean/Median/Mode Imputation
+Beware: you’ll get spikes in your data
+Example: fill in the missing ages in Titanic with the mode of age
+
+
+36
+Missing values: Imputing
+Based on the rest of the data as well:
+Regression Imputation
+K-Nearest Neighbors (KNN) Imputation: replace missing values with the average of the values from the nearest neighbors
+Multiple Imputation: combine different models
+SimpleImputer
+But beware: if you predict the age of people on titanic based on their fare, you strengthen this connection and make it appear stronger in the final model than it actually is
+… which of course will lead to a lower quality model when doing inference
+37
+38
+Bias
+Looking at this data, what percentage of black people carrying a joint will get caught? And what percentage of white people?
+And what will show up in the statistics?
+And what will the cops base their decision on who to stop and frisk on?
+39
+Bias
+More types of Bias:
+Sampling Bias: Non-representative sample.
+Selection Bias: Influenced selection of data points.
+Measurement Bias: Errors in measurement.
+Reporting Bias: Systematic difference in reporting.
+Confirmation Bias: Selective search for confirming information.
+Algorithmic Bias: Discrimination in machine learning models.
+Survivor Bias: Focus on surviving data points.
+Snoop Bias: Test data influencing training process.
+Mitigation: Random sampling, rigorous study designs, careful measurement, transparency, and regular bias assessments.
+
+Bias
+Bias is often linked to preset notions that are continuously confirmed because we choose to ignore all information that doesn’t confirm our information
+You wore a blue shirt and all of the sudden everybody is wearing a blue shirt!
+This often ends up in our data, and it’s something to be aware of, but not something we can easily solve
+Fairness-Constrained Optimization: Add fairness metrics (like demographic parity, equal opportunity) as constraints in the loss function.
+Adversarial Debiasing: Train the model to make predictions while simultaneously trying to prevent it from encoding sensitive information.
+Prejudice Remover Regularizer: Penalize the model for using sensitive attributes in predictions.
+Use explainable AI (XAI) tools like SHAP or LIME to detect biased reasoning.
+It’s the reason the EU has rules on when to use AI models
+41
+Bias we can handle
+We want to detect fraudulent transactions, but only 1% of the data is fraudulent
+We want to train the “what animal is on the savannah”, but the data is:
+50 zebras, 40 wildebeests, 70 antelopes, 2 leopards
+A model that ignores leopards can get an accuracy of 98,8%
+Solution:
+Get more data
+Weight the observations (leopards get more weight than the others)
+Use a propensity score (make sure leopards are selected more when training)
+Simulate our augment missing data
+42
+Snoop Bias
+When information from the test dataset accidentally influences the training process
+Letting the model "cheat" by learning patterns it should not know in advance
+Often leads to performance results that seem overly optimistic
+These results are misleading: when the model encounters fresh, unseen data in practical applications (inference), it stumbles because it has essentially memorized the test data
+The Human Bias Risk: our own human tendency to recognize patterns can influence how we handle test datasets
+We might unintentionally use knowledge from the test data while choosing features or selecting models
+This seemingly harmless "peek" can skew the entire development process, resulting in a model that appears effective during testing but fails miserably in real-world applications
+It's crucial to keep the test set entirely off-limits until the final evaluation.
+43
+Scaling
+The problem: length is between 1.5 and 2.2, weight between 50 and 140
+A model may see the bigger number as more important
+Scaling: adjust range of data to fit between 0 and 1 (or something similar)
+Min-max scaling:
+
+Standarization: 
+
+Will provide you with data that is easier for (some) algorithms to compare
+Not all algorithms need scaling
+
+Scaling
+But is it needed? The data is in separate columns after all…
+Yes:
+K-Nearest Neighbors (KNN): Uses Euclidean distance; scale matters directly
+SVM: Hyperplane depends on distance metrics
+Logistic Regression: Faster convergence, better regularization
+Gradient Descent (e.g., in neural nets): Helps gradient flow and training speed
+No:
+Tree-based models: Splits are based on feature thresholds, not distance
+Naive Bayes: Works with probabilities, not distances
+45
+Feature engineering
+In titanic, what’s the difference between “Miss” and “Mrs.”? And what is a “Master.”?
+Feature engineering: creating, selecting, transforming, or encoding data into formats that maximize a model’s ability to learn patterns
+Example
+Suppose you're building a model to predict customer churn. Raw data might include:
+last_login_date, total_spent, account_creation_date
+Feature engineering could turn this into:
+days_since_last_login, average_spend_per_month, account_age_in_days
+These derived features may carry much more predictive value than the raw inputs.
+
+
+46
+Feature engineering
+Why feature engineering matters
+Boosts model accuracy
+Helps models generalize better
+Allows you to inject domain expertise into the model
+Can reduce the need for complex models
+Another example:
+last_purchase_date, number_of_site_visits, signup_date, total_items_viewed, is_subscribed_to_newsletter
+is_engaged_customer: has made >3 purchases in the last 6 months
+views_per_visit: total_items_viewed / number_of_site_visits
+47
+Summary
+Learning to do machine learning is kind of like motor repairs:
+When learning about it in class it’s all clean and ready
+When in the shop everything is greasy and you’ll spend more time cleaning the engine than working on it
+This is normal, because it’s to easy to store data
+People with a big attic rarely have an ordered attic because they don’t need to save space, they can just dump it all in there
+A good clean will make your models better
+Cleaning to much will make your models worse
+Amputating and imputing both have their challenges
+48
